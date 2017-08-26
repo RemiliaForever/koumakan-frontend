@@ -8,8 +8,13 @@ import App from './app'
 import routes from './routes'
 import storeOption from './store/global.js'
 
+import MuseUI from 'muse-ui'
+import 'muse-ui/dist/muse-ui.css'
+import 'muse-ui/dist/theme-carbon.css'
+
 Vue.use(Vuex)
 Vue.use(VueRouter)
+Vue.use(MuseUI)
 
 // 创建一个路由对象用于管理页面的路由
 const router = new VueRouter({

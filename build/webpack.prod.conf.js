@@ -20,12 +20,6 @@ var webpackConfig = merge(baseWebpackConfig, {
         filename: utils.assetsPath('js/[name]-[chunkhash].js'),
         chunkFilename: utils.assetsPath('js/[id]-[chunkhash].js')
     },
-    vue: {
-        loaders: utils.cssLoaders({
-            sourceMap: config.build.productionSourceMap,
-            extract: true
-        })
-    },
     plugins: [
         // http://vuejs.github.io/vue-loader/workflow/production.html
         new webpack.DefinePlugin({
@@ -36,7 +30,6 @@ var webpackConfig = merge(baseWebpackConfig, {
                 warnings: false
             }
         }),
-        new webpack.optimize.OccurenceOrderPlugin(),
         // extract css into its own file
         new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
         // generate dist index.html with correct asset hash for caching.
@@ -44,8 +37,8 @@ var webpackConfig = merge(baseWebpackConfig, {
         // see https://github.com/ampedandwired/html-webpack-plugin
         new HtmlWebpackPlugin({
             filename: process.env.NODE_ENV === 'testing'
-            ? 'index.html'
-            : config.build.index,
+                ? 'index.html'
+                : config.build.index,
             template: 'index.html',
             inject: true,
             minify: {
@@ -80,8 +73,8 @@ var webpackConfig = merge(baseWebpackConfig, {
         }),
 
         new webpack.ProvidePlugin({
-            Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
-            fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+            Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
+            fetch: 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch'
         })
     ]
 })

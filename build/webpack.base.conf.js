@@ -1,7 +1,9 @@
-var path = require('path')
-var config = require('../config')
-var utils = require('./utils')
-var projectRoot = path.resolve(__dirname, '../')
+const path = require('path')
+const config = require('../config')
+const utils = require('./utils')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+
+const projectRoot = path.resolve(__dirname, '../')
 
 module.exports = {
     entry: {
@@ -14,39 +16,42 @@ module.exports = {
         chunkFilename: '[name].js'
     },
     resolve: {
-        extensions: ['', '.js', '.vue'],
-        fallback: [path.join(__dirname, '../node_modules')],
+        extensions: ['.js', '.vue'],
         alias: {
             'src': path.resolve(__dirname, '../src'),
             'assets': path.resolve(__dirname, '../src/assets'),
             'views': path.resolve(__dirname, '../src/views'),
             'routes': path.resolve(__dirname, '../src/routes'),
             'store': path.resolve(__dirname, '../src/store'),
-            'components': path.resolve(__dirname, '../src/components')
+            'components': path.resolve(__dirname, '../src/components'),
+            'muse-components': 'muse-ui/src'
         }
     },
-    resolveLoader: {
-        fallback: [path.join(__dirname, '../node_modules')]
-    },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue'
+                loader: 'vue-loader',
+                options: {
+                    loaders: utils.cssLoaders
+                }
             },
             {
                 test: /\.js$/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 include: projectRoot,
                 exclude: /node_modules/
             },
             {
-                test: /\.json$/,
-                loader: 'json'
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: 'css-loader'
+                })
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-                loader: 'url',
+                loader: 'url-loader',
                 query: {
                     limit: 10000,
                     name: utils.assetsPath('img/[name].[hash:7].[ext]')
@@ -54,18 +59,19 @@ module.exports = {
             },
             {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-                loader: 'url',
+                loader: 'url-loader',
                 query: {
                     limit: 10000,
                     name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
                 }
+            },
+            {
+                test: /muse-ui.src.*?js$/,
+                loader: 'babel-loader'
             }
         ]
     },
-    vue: {
-        loaders: utils.cssLoaders(),
-        postcss: [require('postcss-cssnext')()]
-    },
-
-    plugins: []
+    plugins: [
+        new ExtractTextPlugin('styles.css')
+    ]
 }

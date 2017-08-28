@@ -55,19 +55,19 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" rel="stylesheet/scss" scoped>
-    $blue: #66ccff;
-    $green: #66ffcc;
+<style lang="scss" scoped>
+$blue: #66ccff;
+$green: #66ffcc;
 
-    h1 {
-        color: $green;
-    }
+h1 {
+    color: $green;
+}
 
-    .logo {
-        width: 100px;
-        height: 100px;
-        a {
-            text-decoration: none;
-        }
+.logo {
+    width: 100px;
+    height: 100px;
+    a {
+        text-decoration: none;
     }
+}
 </style>

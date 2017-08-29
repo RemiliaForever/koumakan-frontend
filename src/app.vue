@@ -1,11 +1,12 @@
 <template>
     <div id="app">
-        <side-bar :show="sideBarIsShow" :docked="sideBarIsDocked" @close="toggleSideBar" @err="handleError"/>
-        <mu-appbar :title="title" class="right-part"
-            :class="{'nav-margin': sideBarIsDocked}">
-            <mu-icon-button icon="menu" v-show="!sideBarIsDocked" slot="left" @click="toggleSideBar"/>
-        </mu-appbar>
-        <router-view class="right-part" :class="{'nav-margin': sideBarIsDocked}"/>
+        <side-bar :show="sideBarIsShow" :docked="sideBarIsDocked" @close="toggleSideBar"/>
+        <main id="right-part" :class="{'nav-margin': sideBarIsDocked}">
+            <mu-appbar class="app-bar" :zDepth="2" :title="title">
+                <mu-icon-button icon="menu" v-show="!sideBarIsDocked" slot="left" @click="toggleSideBar"/>
+            </mu-appbar>
+            <router-view class="content-view"/>
+        </main>
     </div>
 </template>
 
@@ -17,8 +18,7 @@
             return {
                 sideBarIsShow: document.body.clientWidth > 980,
                 sideBarIsDocked: document.body.clientWidth > 980,
-                title: 'Welcom to Koumakan',
-                err: {status: 200, message: 'No Error Happened!'}
+                title: 'Welcome to Koumakan'
             }
         },
         components: {
@@ -31,10 +31,6 @@
                 } else {
                     this.sideBarIsShow = true
                 }
-            },
-            handleError(err) {
-                this.err = err
-                this.$router.push({path: '/error'})
             }
         },
         mounted() {
@@ -66,10 +62,21 @@
 
     #app {
         background-color: $green;
+        width: 100%;
+        height: 100%;
 
-        .right-part {
+        #right-part {
             transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
             -webkit-transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
+
+            .app-bar {
+                position: fixed;
+            }
+
+            .content-view {
+                width: 100%;
+                height: 100%;
+            }
         }
 
         .nav-margin {

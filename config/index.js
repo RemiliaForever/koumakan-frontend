@@ -1,11 +1,10 @@
 // see http://vuejs-templa
 // tes.github.io/webpack for documentation.
-var path = require('path')
-var os = require('os')
-var networkInterfaces = os.networkInterfaces()
-var ip
+const path = require('path')
+const os = require('os')
+const networkInterfaces = os.networkInterfaces()
 
-for (var key in networkInterfaces) {
+for (let key in networkInterfaces) {
     networkInterfaces[key].forEach(item => {
         if (!item.internal && item.family === 'IPv4') {
             ip = item.address

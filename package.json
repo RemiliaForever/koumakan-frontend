@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "koumakan frontend",
   "author": "RemiliaForever <remilia@koumakan.cc>",
-  "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",

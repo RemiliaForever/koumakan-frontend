@@ -1,24 +1,14 @@
 <template>
     <div>
-        <mu-card v-for="item in items" :key="item.content">
-            <mu-card-title title="Content Title" subTitle="Content Title"/>
+        <mu-card v-for="article in articles" :key="article.date">
+            <mu-card-title title="article.title"/>
             <mu-card-text>
-                散落在指尖的阳光，我试着轻轻抓住光影的踪迹，它却在眉宇间投下一片淡淡的阴影。
-                调皮的阳光掀动了四月的心帘，温暖如约的歌声渐起。
-                似乎在诉说着，我也可以在漆黑的角落里，找到阴影背后的阳光，
-                找到阳光与阴影奏出和谐的旋律。我要用一颗敏感赤诚的心迎接每一缕滑过指尖的阳光！
-                {{ item.content }}
+                {{ article.brief }}
             </mu-card-text>
             <mu-card-actions>
-                <mu-flat-button label="Action 1" @click="open"/>
                 <mu-flat-button label="Action 2"/>
             </mu-card-actions>
         </mu-card>
-        <mu-dialog :open="dialog" title="Dialog" @close="close">
-            这是一个简单的弹出框
-            <mu-flat-button slot="actions" @click="open" primary label="取消"/>
-            <mu-flat-button slot="actions" primary @click="close" label="确定"/>
-        </mu-dialog>
     </div>
 </template>
 
@@ -26,32 +16,50 @@
     export default {
         data() {
             return {
-                items: [
-                    {content: '2Loading...'},
-                    {content: '3Loading......'},
-                    {content: '1Loading.........'},
-                    {content: '5Loading............'},
-                    {content: '0Loading...............'},
-                    {content: '4Loading..................'}
-                ],
+                articles: null,
                 dialog: false
             }
         },
+        watch: {
+            '$route'(to, from) {
+                this.getArticleList()
+            }
+        },
         methods: {
-            async getContent() {
-                const response = await fetch('/api/hello')
-                this.content = await response.text()
-            },
-            open() {
-                this.dialog = true;
-            },
-            close() {
-                this.dialog = false;
+            async getArticleList() {
+                let p = this.$route.path.split('/')
+                const response = await fetch('/blog/getArticleList', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type: p[1],
+                        param: p[2]
+                    })
+                })
+                let list = await response.json()
+                this.articles = list
+                switch (p[1]) {
+                    case 'type':
+                        this.$emit('changeTitle', p[2].toUpperCase() + ' 类型下的文章')
+                        break
+                    case 'label':
+                        this.$emit('changeTitle', p[2] + ' 标签下的文章')
+                        break
+                    case 'archive':
+                        this.$emit('changeTitle', p[2] + ' 的归档文档')
+                        break
+                    case 'search':
+                        this.$emit('changeTitle', p[2] + ' 的搜索结果')
+                        break
+                    default:
+                        this.$emit('changeTitle', 'Welcome to Koumakan')
+                }
             }
         },
         mounted() {
-            document.title = '使用 vue！'
-            this.getContent()
+            this.getArticleList()
         }
     }
 </script>

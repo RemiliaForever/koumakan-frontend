@@ -2,17 +2,14 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 
 import Vue from 'vue'
-import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import App from './app'
 import routes from './routes'
-import storeOption from './store/global.js'
 
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import 'muse-ui/dist/theme-carbon.css'
 
-Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(MuseUI)
 
@@ -22,13 +19,9 @@ const router = new VueRouter({
     routes: routes
 })
 
-// 创建一个 store 对象用于管理应用状态
-const store = new Vuex.Store(storeOption)
-
 window.__lendApp__ = new Vue({
     el: '#app',
     router,
-    store,
     render: h => h(App)
 })
 

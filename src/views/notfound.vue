@@ -19,7 +19,7 @@
             }
         },
         mounted() {
-            document.title = '使用 vue！'
+            this.$emit('changeTitle', 'Welcome to Koumakan')
         }
     }
 </script>

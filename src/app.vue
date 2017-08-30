@@ -5,7 +5,7 @@
             <mu-appbar class="app-bar" :zDepth="2" :title="title">
                 <mu-icon-button icon="menu" v-show="!sideBarIsDocked" slot="left" @click="toggleSideBar"/>
             </mu-appbar>
-            <router-view class="content-view"/>
+            <router-view class="content-view" @changeTitle="changeTitle"/>
         </main>
     </div>
 </template>
@@ -31,12 +31,16 @@
                 } else {
                     this.sideBarIsShow = true
                 }
+            },
+            changeTitle(title) {
+                this.title = title
+                document.title = title
             }
         },
         mounted() {
             let that = this
             let resizeTimer = false
-            function caculateSideBarMode() {
+            window.addEventListener('resize', () => {
                 if (!resizeTimer) {
                     resizeTimer = true
                     setTimeout(() => {
@@ -52,16 +56,15 @@
                         resizeTimer = false
                     }, 400)
                 }
-            }
-            window.addEventListener('resize', caculateSideBarMode)
+            })
         }
     }
 </script>
-<style lang="scss" scope>
+
+<style lang="scss" scoped>
     $green: #66ccff;
 
     #app {
-        background-color: $green;
         width: 100%;
         height: 100%;
 

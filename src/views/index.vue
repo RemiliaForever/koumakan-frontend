@@ -39,6 +39,13 @@
                     })
                 })
                 let list = await response.json()
+                list.push(list[0])
+                list.push(list[0])
+                list.push(list[0])
+                list.push(list[0])
+                list.push(list[0])
+                list.push(list[0])
+                list.push(list[0])
                 this.articles = list
                 switch (p[1]) {
                     case 'type':

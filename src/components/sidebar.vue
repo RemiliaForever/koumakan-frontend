@@ -1,6 +1,6 @@
 <template>
     <nav>
-        <mu-drawer :class="{sidebar:true}"  :width="256" :zDepth="2" :open="show" :docked="docked" @close="close">
+        <mu-drawer :class="{sidebar:true}"  :width="256" :zDepth="1" :open="show" :docked="docked" @close="close">
             <mu-list>
                 <mu-list-item disabled>
                     <mu-paper circle :class="{'avatar': true}">

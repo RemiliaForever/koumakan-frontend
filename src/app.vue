@@ -1,10 +1,11 @@
 <template>
     <div id="app">
         <side-bar :show="sideBarIsShow" :docked="sideBarIsDocked" @close="toggleSideBar"/>
-        <main id="right-part" :class="{'nav-margin': sideBarIsDocked}">
-            <mu-appbar class="app-bar" :zDepth="2" :title="title">
-                <mu-icon-button icon="menu" v-show="!sideBarIsDocked" slot="left" @click="toggleSideBar"/>
-            </mu-appbar>
+        <mu-appbar class="app-bar" :class="{'app-bar-margin': sideBarIsDocked}" :title="title">
+            <mu-icon-button icon="menu" v-show="!sideBarIsDocked" slot="left" @click="toggleSideBar"/>
+            <mu-text-field icon="search" slot="right"/>
+        </mu-appbar>
+        <main :class="{'main-margin': sideBarIsDocked}">
             <router-view class="content-view" @changeTitle="changeTitle"/>
         </main>
     </div>
@@ -35,6 +36,9 @@
             changeTitle(title) {
                 this.title = title
                 document.title = title
+                if (!this.sideBarIsDocked) {
+                    this.sideBarIsShow = false
+                }
             }
         },
         mounted() {
@@ -68,22 +72,42 @@
         width: 100%;
         height: 100%;
 
-        #right-part {
+
+        .app-bar {
             transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
             -webkit-transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
+            background-color: #ffffff;
+            color: #474a4f;
+            position: fixed;
+        }
 
-            .app-bar {
-                position: fixed;
-            }
+        main {
+            transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
+            -webkit-transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
+            padding: 72px auto 0px auto;
+            background-color: #ebebeb;
+        }
 
+        @media(min-width: 980px) {
             .content-view {
-                width: 100%;
-                height: 100%;
+                margin-left: 3px;
+                margin-right: 3px;
+                width: auto;
             }
         }
 
-        .nav-margin {
-            margin-left: 256px;
+        @media(min-width: 1168px) {
+            .content-view {
+                margin: auto;
+                width: 800px;
+            }
+        }
+
+        .app-bar-margin {
+            padding-left: 265px;
+        }
+        .main-margin {
+            padding-left: 256px;
         }
     }
 </style>

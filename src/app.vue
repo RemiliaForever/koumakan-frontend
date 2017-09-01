@@ -3,7 +3,9 @@
         <side-bar :show="sideBarIsShow" :docked="sideBarIsDocked" @close="toggleSideBar"/>
         <mu-appbar class="app-bar" :class="{'app-bar-margin': sideBarIsDocked}" :title="title">
             <mu-icon-button icon="menu" v-show="!sideBarIsDocked" slot="left" @click="toggleSideBar"/>
-            <mu-text-field icon="search" slot="right"/>
+            <mu-icon-button icon="search" slot="right" @click="toggleSearchFiled"/>
+            <mu-text-field slot="right" class="search-filed" :style="{'width': searchFiledIsShow?'196px':'0px'}"
+                @blur="toggleSearchFiled" @change="search"/>
         </mu-appbar>
         <main :class="{'main-margin': sideBarIsDocked}">
             <router-view class="content-view" @changeTitle="changeTitle"/>
@@ -19,6 +21,7 @@
             return {
                 sideBarIsShow: document.body.clientWidth > 980,
                 sideBarIsDocked: document.body.clientWidth > 980,
+                searchFiledIsShow: false,
                 title: 'Welcome to Koumakan'
             }
         },
@@ -34,11 +37,25 @@
                 }
             },
             changeTitle(title) {
-                this.title = title
-                document.title = title
+                this.title = decodeURI(title)
+                document.title = this.title
                 if (!this.sideBarIsDocked) {
                     this.sideBarIsShow = false
                 }
+            },
+            toggleSearchFiled() {
+                this.searchFiledIsShow = !this.searchFiledIsShow
+                if (this.searchFiledIsShow) {
+                    document.getElementsByClassName('search-filed')[0]
+                        .getElementsByTagName('input')[0]
+                        .focus()
+                }
+            },
+            search(event, value) {
+                document.getElementsByClassName('search-filed')[0]
+                    .getElementsByTagName('input')[0]
+                    .blur()
+                this.$router.push('/search/' + value)
             }
         },
         mounted() {
@@ -74,40 +91,67 @@
 
 
         .app-bar {
-            transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
-            -webkit-transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: padding .45s cubic-bezier(0.23, 1, 0.32, 1);
+            -webkit-transition: padding .45s cubic-bezier(0.23, 1, 0.32, 1);
             background-color: #ffffff;
             color: #474a4f;
             position: fixed;
         }
 
         main {
-            transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
-            -webkit-transition: margin .45s cubic-bezier(0.23, 1, 0.32, 1);
-            padding: 72px auto 0px auto;
+            transition: padding .45s cubic-bezier(0.23, 1, 0.32, 1);
+            -webkit-transition: padding .45s cubic-bezier(0.23, 1, 0.32, 1);
+            min-height: 100%;
+            padding-top: 72px;
             background-color: #ebebeb;
         }
 
-        @media(min-width: 980px) {
+        .content-view {
+            transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
+            -webkit-transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        @media(max-width: 980px) {
             .content-view {
                 margin-left: 3px;
                 margin-right: 3px;
                 width: auto;
             }
         }
-
-        @media(min-width: 1168px) {
+        @media(min-width: 980px) {
             .content-view {
                 margin: auto;
-                width: 800px;
+                width: 700px;
+            }
+        }
+        @media(min-width: 1280px) {
+            .content-view {
+                margin: auto;
+                width: 900px;
+            }
+        }
+        @media(min-width: 1680px) {
+            .content-view {
+                margin: auto;
+                width: 1200px;
             }
         }
 
-        .app-bar-margin {
-            padding-left: 265px;
-        }
-        .main-margin {
-            padding-left: 256px;
+    }
+    .app-bar-margin {
+        padding-left: 278px;
+    }
+    .main-margin {
+        padding-left: 256px;
+    }
+    .search-filed {
+        transition: width .45s cubic-bezier(0.23, 1, 0.32, 1);
+        -webkit-transition: width .45s cubic-bezier(0.23, 1, 0.32, 1);
+        margin-bottom: 0px;
+        width: 10px;
+
+        &:focus {
+            width: 256px !important;
         }
     }
+
 </style>

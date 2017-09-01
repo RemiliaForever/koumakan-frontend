@@ -5,7 +5,8 @@ module.exports = [
     {
         api: '/blog/getArticleList',
         response: (req, res) => {
-            let data = [{title: '这是标题', brief: '简介'}]
+            let a = {title: '这是标题', brief: '简介'}
+            let data = []
             res.type('json')
             res.send(data)
         }

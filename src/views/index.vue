@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="articles.length>0">
         <mu-card v-for="article in articles" :key="article.date">
             <mu-card-title title="article.title"/>
             <mu-card-text>
@@ -10,13 +10,16 @@
             </mu-card-actions>
         </mu-card>
     </div>
+    <div v-else>
+        Not Article Found
+    </div>
 </template>
 
 <script>
     export default {
         data() {
             return {
-                articles: null,
+                articles: [],
                 dialog: false
             }
         },
@@ -38,15 +41,7 @@
                         param: p[2]
                     })
                 })
-                let list = await response.json()
-                list.push(list[0])
-                list.push(list[0])
-                list.push(list[0])
-                list.push(list[0])
-                list.push(list[0])
-                list.push(list[0])
-                list.push(list[0])
-                this.articles = list
+                this.articles = await response.json()
                 switch (p[1]) {
                     case 'type':
                         this.$emit('changeTitle', p[2].toUpperCase() + ' 类型下的文章')

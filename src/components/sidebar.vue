@@ -8,7 +8,6 @@
                     </mu-paper>
                     <p class="nick">RemiliaForever</p>
                 </mu-list-item>
-                <br>
                 <mu-list-item title="首页" to="/">
                     <mu-icon slot="left" value="home"/>
                 </mu-list-item>

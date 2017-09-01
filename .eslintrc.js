@@ -27,6 +27,7 @@ module.exports = {
         'indent': [2, 4, {"SwitchCase" : 1}],
         'require-jsdoc': 0,
         'comma-dangle': [2, 'never'],
-        'max-len': [1, 120]
+        'max-len': [1, 120],
+        'switch-colon-spacing': 0
     }
 }

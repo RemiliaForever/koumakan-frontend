@@ -21,6 +21,7 @@
             }
         },
         mounted() {
+            this.$emit('changeTitle', 'title')
             this.getArticle()
         }
     }

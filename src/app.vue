@@ -83,8 +83,6 @@
 </script>
 
 <style lang="scss" scoped>
-    $green: #66ccff;
-
     #app {
         width: 100%;
         height: 100%;
@@ -93,7 +91,7 @@
         .app-bar {
             transition: padding .45s cubic-bezier(0.23, 1, 0.32, 1);
             -webkit-transition: padding .45s cubic-bezier(0.23, 1, 0.32, 1);
-            background-color: #ffffff;
+            background-color: #fafafa;
             color: #474a4f;
             position: fixed;
         }
@@ -148,10 +146,6 @@
         -webkit-transition: width .45s cubic-bezier(0.23, 1, 0.32, 1);
         margin-bottom: 0px;
         width: 10px;
-
-        &:focus {
-            width: 256px !important;
-        }
     }
 
 </style>

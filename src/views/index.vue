@@ -1,14 +1,6 @@
 <template>
     <div v-if="articles.length>0">
-        <mu-card v-for="article in articles" :key="article.date">
-            <mu-card-title title="article.title"/>
-            <mu-card-text>
-                {{ article.brief }}
-            </mu-card-text>
-            <mu-card-actions>
-                <mu-flat-button label="Action 2"/>
-            </mu-card-actions>
-        </mu-card>
+        <article-card v-for="article in articles" :article="article"/>
     </div>
     <div v-else>
         Not Article Found
@@ -16,12 +8,17 @@
 </template>
 
 <script>
+    import articleCard from '../components/card.vue'
     export default {
         data() {
             return {
                 articles: [],
-                dialog: false
+                pagesize: 10,
+                offset: 0
             }
+        },
+        components: {
+            articleCard
         },
         watch: {
             '$route'(to, from) {
@@ -38,7 +35,9 @@
                     },
                     body: JSON.stringify({
                         type: p[1],
-                        param: p[2]
+                        param: p[2],
+                        pagesize: this.pagesize,
+                        offset: this.offset
                     })
                 })
                 this.articles = await response.json()
@@ -68,18 +67,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-    $blue: #66ccff;
-    $green: #66ffcc;
-
-    h1 {
-        color: $green;
-    }
-
-    .logo {
-        width: 100px;
-        height: 100px;
-        a {
-            text-decoration: none;
-        }
-    }
 </style>

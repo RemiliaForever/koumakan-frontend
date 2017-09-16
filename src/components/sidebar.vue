@@ -1,9 +1,9 @@
 <template>
     <nav>
-        <mu-drawer :class="{sidebar:true}"  :width="256" :zDepth="1" :open="show" :docked="docked" @close="close">
+        <mu-drawer class="sidebar"  :width="256" :zDepth="1" :open="show" :docked="docked" @close="close">
             <mu-list>
                 <mu-list-item disabled>
-                    <mu-paper circle :class="{'avatar': true}">
+                    <mu-paper circle class="avatar">
                         <mu-avatar :size="96" src="/static/images/avatar.jpg" alt="RemiliaForever"/>
                     </mu-paper>
                     <p class="nick">RemiliaForever</p>
@@ -60,8 +60,8 @@
         },
         data() {
             return {
-                archive: null,
-                label: null
+                archive: [],
+                label: []
             }
         },
         async mounted() {
@@ -73,9 +73,9 @@
     }
 </script>
 
-<style lang="scss" scoped>
-    .listpadding {
-        padding-left: 30px;
+<style lang="css" scoped>
+    .sidebar {
+        background-color: #fafafa;
     }
     .avatar {
         width: 96px;
@@ -86,15 +86,5 @@
         text-align: center;
         font-size: 24px;
         margin-bottom: 0;
-    }
-    .chip-container {
-        display: flex;
-        padding-top: 5px;
-        flex-wrap: wrap;
-        align-items: stretch;
-
-        div {
-            margin: 1px;
-        }
     }
 </style>

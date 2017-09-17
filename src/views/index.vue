@@ -1,6 +1,6 @@
 <template>
-    <div v-if="articles.length>0">
-        <article-card v-for="article in articles" :article="article"/>
+    <div id="articleList" v-if="articles.length>0">
+        <article-card v-for="article in articles" :article="article" :key="article.date"/>
     </div>
     <div v-else>
         Not Article Found
@@ -12,8 +12,7 @@
     export default {
         data() {
             return {
-                articles: [],
-                pagesize: 10,
+                articles: [{title:'载入中...'}],
                 offset: 0
             }
         },
@@ -28,19 +27,19 @@
         methods: {
             async getArticleList() {
                 let p = this.$route.path.split('/')
-                const response = await fetch('/blog/getArticleList', {
+                const response = await fetch('/api/getArticleList', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        type: p[1],
+                        typestring: p[1],
                         param: p[2],
-                        pagesize: this.pagesize,
                         offset: this.offset
                     })
                 })
                 this.articles = await response.json()
+                this.offset = 0
                 switch (p[1]) {
                     case 'type':
                         this.$emit('changeTitle', p[2].toUpperCase() + ' 类型下的文章')
@@ -57,6 +56,22 @@
                     default:
                         this.$emit('changeTitle', 'Welcome to Koumakan')
                 }
+            },
+            async getMoreArticle() {
+                let p = this.$route.path.split('/')
+                this.offset += 1
+                const response = await fetch('/api/getArticleList', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        typestring: p[1],
+                        param: p[2],
+                        offset: this.offset
+                    })
+                })
+                this.articles = this.articles.concat(await response.json())
             }
         },
         mounted() {
@@ -66,5 +81,8 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style lang="css" scoped>
+    #articleList {
+        position: relative;
+    }
 </style>

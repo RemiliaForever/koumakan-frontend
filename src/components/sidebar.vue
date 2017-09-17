@@ -65,9 +65,9 @@
             }
         },
         async mounted() {
-            let res = await fetch('/blog/getArchive')
+            let res = await fetch('/api/getArchive', {method: 'POST'})
             this.archive = await res.json()
-            res = await fetch('/blog/getAllLabel')
+            res = await fetch('/api/getLabel', {method: 'POST'})
             this.label = await res.json()
         }
     }

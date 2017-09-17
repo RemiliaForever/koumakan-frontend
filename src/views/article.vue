@@ -8,21 +8,46 @@
     export default {
         data() {
             return {
+                article: {
+                    title: '载入中'
+                },
+                comment: []
             }
         },
         watch: {
             '$route'(to, from) {
-                this.getArticle()
+                this.getData()
             }
         },
         methods: {
-            getArticle() {
-                this.articles = 'asdf'
+            async getData() {
+                let id = this.$route.path.split('/')[2]
+                this.$emit('changeTitle', '载入中...')
+                let response = await fetch('/api/getArticle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id
+                    })
+                })
+                this.article = await response.json()
+                this.$emit('changeTitle', this.article.title)
+                response = await fetch('/api/getComment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id
+                    })
+                })
+                this.comment = await response.json()
             }
         },
         mounted() {
-            this.$emit('changeTitle', 'title')
-            this.getArticle()
+            this.getData()
         }
     }
 </script>

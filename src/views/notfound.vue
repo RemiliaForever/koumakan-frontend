@@ -3,7 +3,7 @@
         <p class="title">您来到了未知的领域</p>
         <p class="subtitle">Oops! That page can’t be found.</p>
         <div class="search">
-            <mu-text-field hintText="Search..." fullWidth @change="search"/>
+            <mu-text-field v-model.trim="searchFieldValue" hintText="Search..." fullWidth @keyup.native.enter="search"/>
         </div>
     </mu-paper>
 </template>
@@ -12,11 +12,13 @@
     export default {
         data() {
             return {
+                searchFieldValue: ''
             }
         },
         methods: {
-            search(event, value) {
-                this.$router.push('/search/' + value)
+            search() {
+                if (this.searchFieldValue == '') return
+                this.$router.push('/search/' + this.searchFieldValue)
             }
         },
         mounted() {
@@ -25,7 +27,7 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .paper {
         padding: 15px;
         min-height: 500px;
@@ -47,10 +49,17 @@
         margin-left: auto;
         margin-right: auto;
         margin-top: 100px;
-        padding-left: 15px;
+        padding-left: 25px;
         padding-top: 15px;
-        padding-right: 15px;
+        padding-right: 25px;
         background-color: #ebebeb;
         border-radius: 25px;
+
+        .mu-text-field-hint {
+            font-size: 24px;
+        }
+        .mu-text-field-input {
+            font-size: 24px;
+        }
     }
 </style>

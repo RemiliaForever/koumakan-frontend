@@ -3,9 +3,9 @@
         <side-bar :show="sideBarIsShow" :docked="sideBarIsDocked" @close="toggleSideBar"/>
         <mu-appbar class="app-bar" :class="{'app-bar-margin': sideBarIsDocked}" :title="title">
             <mu-icon-button icon="menu" v-show="!sideBarIsDocked" slot="left" @click="toggleSideBar"/>
-            <mu-icon-button icon="search" slot="right" @click="toggleSearchFiled"/>
-            <mu-text-field slot="right" class="search-filed" :style="{'width': searchFiledIsShow?'196px':'0px'}"
-                @blur="toggleSearchFiled" @change="search"/>
+            <mu-icon-button icon="search" slot="right" @click="toggleSearchField"/>
+            <mu-text-field slot="right" class="search-filed" :style="{'width': searchFieldIsShow?'196px':'0px'}"
+                @blur="toggleSearchField" v-model.trim="searchFieldValue" @keyup.native.enter="search"/>
         </mu-appbar>
         <main :class="{'main-margin': sideBarIsDocked}">
             <router-view class="content-view" @changeTitle="changeTitle"/>
@@ -21,7 +21,8 @@
             return {
                 sideBarIsShow: document.body.clientWidth > 980,
                 sideBarIsDocked: document.body.clientWidth > 980,
-                searchFiledIsShow: false,
+                searchFieldIsShow: false,
+                searchFieldValue: '',
                 title: 'Welcome to Koumakan'
             }
         },
@@ -43,19 +44,20 @@
                     this.sideBarIsShow = false
                 }
             },
-            toggleSearchFiled() {
-                this.searchFiledIsShow = !this.searchFiledIsShow
-                if (this.searchFiledIsShow) {
+            toggleSearchField() {
+                this.searchFieldIsShow = !this.searchFieldIsShow
+                if (this.searchFieldIsShow) {
                     document.getElementsByClassName('search-filed')[0]
                         .getElementsByTagName('input')[0]
                         .focus()
                 }
             },
-            search(event, value) {
+            search() {
                 document.getElementsByClassName('search-filed')[0]
                     .getElementsByTagName('input')[0]
                     .blur()
-                this.$router.push('/search/' + value)
+                if (this.searchFieldValue == '') return
+                this.$router.push('/search/' + this.searchFieldValue)
             }
         },
         mounted() {

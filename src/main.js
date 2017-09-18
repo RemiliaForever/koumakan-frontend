@@ -1,15 +1,12 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './app'
 import routes from './routes'
+Vue.use(VueRouter)
 
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
-
-Vue.use(VueRouter)
+import 'muse-ui/dist/theme-carbon.css'
 Vue.use(MuseUI)
 // markdown 和 highlight 支持
 import marked from 'marked'

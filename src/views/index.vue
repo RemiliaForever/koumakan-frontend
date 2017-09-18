@@ -1,5 +1,6 @@
 <template>
-    <div id="articleList" v-if="articles.length>0">
+    <div v-if="articles.length>0">
+        <div style="margin-top:-24px"/>
         <article-card v-for="article in articles" :article="article" :key="article.date"/>
     </div>
     <div v-else>
@@ -12,7 +13,14 @@
     export default {
         data() {
             return {
-                articles: [{title:'载入中...'}],
+                articles: [{
+                    title: '载入中...',
+                    brief: '',
+                    content: '',
+                    type: 'unknown',
+                    labels: '',
+                    date: '0000-00-00 00:00:00'
+                }],
                 offset: 0
             }
         },
@@ -82,7 +90,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="css" scoped>
-    #articleList {
-        position: relative;
-    }
 </style>

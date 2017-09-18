@@ -8,11 +8,39 @@ import routes from './routes'
 
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
-import 'muse-ui/dist/theme-carbon.css'
 
 Vue.use(VueRouter)
 Vue.use(MuseUI)
-
+// markdown 和 highlight 支持
+import marked from 'marked'
+import 'highlight.js/styles/github.css'
+marked.setOptions({
+    renderer: new marked.Renderer(),
+    gfm: true,
+    tables: true,
+    breaks: false,
+    pedantic: false,
+    sanitize: false,
+    smartLists: true,
+    smartypants: false,
+    highlight: function(code) {
+        return require('highlight.js').highlightAuto(code).value
+    }
+})
+Vue.prototype.marked = marked
+// mathjax 支持
+// import MathJax from 'mathjax'
+// Vue.prototype._mathjax = MathJax
+// Vue._mathjax.Hub = {Config: {
+//     'extensions': ['tex2jax.js'],
+//     'jax': ['input/TeX', 'output/HTML-CSS'],
+//     'tex2jax': {
+//         inlineMath: [['$', '$'], ['\\(', '\\)']],
+//         displayMath: [['$$', '$$'], ['\\[', '\\]']],
+//         processEscapes: true
+//     },
+//     'HTML-CSS': {availableFonts: ['TeX']}
+// }}
 // 创建一个路由对象用于管理页面的路由
 const router = new VueRouter({
     mode: 'history',

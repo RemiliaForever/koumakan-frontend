@@ -5,6 +5,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const projectRoot = path.resolve(__dirname, '../')
 
+
 module.exports = {
     entry: {
         main: './src/main.js'
@@ -30,44 +31,39 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /muse-ui.src.*?js$/,
+                loader: 'babel-loader'
+            }, {
                 test: /\.vue$/,
                 loader: 'vue-loader',
                 options: {
                     loaders: utils.cssLoaders
                 }
-            },
-            {
+            }, {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 include: projectRoot,
                 exclude: /node_modules/
-            },
-            {
+            }, {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: 'css-loader'
                 })
-            },
-            {
+            }, {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
                 query: {
                     limit: 10000,
                     name: utils.assetsPath('img/[name].[hash:7].[ext]')
                 }
-            },
-            {
+            }, {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
                 loader: 'url-loader',
                 query: {
                     limit: 10000,
                     name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
                 }
-            },
-            {
-                test: /muse-ui.src.*?js$/,
-                loader: 'babel-loader'
             }
         ]
     },

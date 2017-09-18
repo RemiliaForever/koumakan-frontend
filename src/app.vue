@@ -100,7 +100,7 @@
             transition: padding .45s cubic-bezier(0.23, 1, 0.32, 1);
             -webkit-transition: padding .45s cubic-bezier(0.23, 1, 0.32, 1);
             min-height: 100%;
-            padding-top: 48px;
+            padding-top: 76px;
             background-color: #ebebeb;
         }
 

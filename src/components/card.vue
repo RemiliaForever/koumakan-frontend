@@ -42,14 +42,13 @@
 </script>
 
 <style lang="scss" scoped>
-    $black: #373a3f;
     .card {
         margin-top: 25px;
     }
     .title {
         padding: 16px;
         a {
-            color: $black;
+            color: #373a3f;
             font-size: 24px;
         }
     }
@@ -65,22 +64,18 @@
             top: 6px;
             left: 4px;
         }
-        .date {
-            display: inline;
-            float: left;
-            margin-right: 10px;
-            height: 36px;
-            line-height: 36px;
-        }
-
-        .labels {
+        .date, .labels {
             display: inline;
             float: left;
             height: 36px;
             line-height: 36px;
+            color: gray;
             a {
-                color: $black;
+                color: gray;
             }
+        }
+        .date {
+            margin-right: 10px;
         }
 
         .button {

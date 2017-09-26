@@ -9,13 +9,14 @@ const rootPath = ''
 const routes = [
     {path: '/', component: Index},
     {path: '/article/:id', component: Article},
-    {path: '/:typestring/:param', component: Index}
+    {path: '/:typestring/:param', component: Index},
+    {path: '/notfound', component: NotFound}
 ].map(route => {
     route.path = rootPath + route.path
     return route
 })
 
 // 404 页
-routes.push({path: '*', component: NotFound})
+routes.push({path: '*', redirect: '/notfound'})
 
 export default routes

@@ -34,14 +34,12 @@
         },
         methods: {
             async getArticleList() {
-                this.offset = 0
-                this.articles = await this.post('/api/getArticleList', {
-                    typestring: this.$route.params.typestring,
-                    param: this.$route.params.param,
-                    offset: this.offset
-                })
                 let param = this.$route.params.param
-                switch (param) {
+                if (!this.$route.params.typestring) {
+                    this.$emit('changeTitle', 'Welcome to Koumakan')
+                    return
+                }
+                switch (this.$route.params.typestring) {
                     case 'type':
                         this.$emit('changeTitle', param.toUpperCase() + ' 类型下的文章')
                         break
@@ -55,8 +53,14 @@
                         this.$emit('changeTitle', param + ' 的搜索结果')
                         break
                     default:
-                        // this.$router.push('/notfound')
+                        this.$router.push('/notfound')
                 }
+                this.offset = 0
+                this.articles = await this.post('/api/getArticleList', {
+                    typestring: this.$route.params.typestring,
+                    param: this.$route.params.param,
+                    offset: this.offset
+                })
             },
             async getMoreArticle() {
                 this.offset += 1

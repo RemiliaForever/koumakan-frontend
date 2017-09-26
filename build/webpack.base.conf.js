@@ -1,66 +1,76 @@
-const path = require('path')
-const config = require('../config')
-const utils = require('./utils')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+let path = require('path')
+let webpack = require('webpack')
+let utils = require('./utils')
+let config = require('../config')
+let vueLoaderConfig = require('./vue-loader.conf')
 
-const projectRoot = path.resolve(__dirname, '../')
-
+function resolve(dir) {
+    return path.join(__dirname, '..', dir)
+}
 
 module.exports = {
     entry: {
-        main: './src/main.js'
+        app: './src/main.js'
     },
     output: {
         path: config.build.assetsRoot,
-        publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath,
         filename: '[name].js',
-        chunkFilename: '[name].js'
+        publicPath: process.env.NODE_ENV === 'production'
+            ? config.build.assetsPublicPath
+            : config.dev.assetsPublicPath
     },
     resolve: {
-        extensions: ['.js', '.vue'],
+        extensions: ['.js', '.vue', '.json'],
         alias: {
+            'vue$': 'vue/dist/vue.esm.js',
             'src': path.resolve(__dirname, '../src'),
             'assets': path.resolve(__dirname, '../src/assets'),
             'views': path.resolve(__dirname, '../src/views'),
             'routes': path.resolve(__dirname, '../src/routes'),
-            'store': path.resolve(__dirname, '../src/store'),
-            'components': path.resolve(__dirname, '../src/components'),
-            'muse-components': 'muse-ui/src'
+            'components': path.resolve(__dirname, '../src/components')
         }
     },
     module: {
         rules: [
             {
-                test: /muse-ui.src.*?js$/,
-                loader: 'babel-loader'
-            }, {
+                test: /\.(js|vue)$/,
+                loader: 'eslint-loader',
+                enforce: 'pre',
+                include: [resolve('src'), resolve('test')],
+                options: {
+                    formatter: require('eslint-friendly-formatter')
+                }
+            },
+            {
                 test: /\.vue$/,
                 loader: 'vue-loader',
-                options: {
-                    loaders: utils.cssLoaders
-                }
-            }, {
+                options: vueLoaderConfig
+            },
+            {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                include: projectRoot,
-                exclude: /node_modules/
-            }, {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: 'css-loader'
-                })
-            }, {
+                include: [resolve('src'), resolve('test')]
+            },
+            {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
-                query: {
+                options: {
                     limit: 10000,
                     name: utils.assetsPath('img/[name].[hash:7].[ext]')
                 }
-            }, {
+            },
+            {
+                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: utils.assetsPath('media/[name].[hash:7].[ext]')
+                }
+            },
+            {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
                 loader: 'url-loader',
-                query: {
+                options: {
                     limit: 10000,
                     name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
                 }
@@ -68,6 +78,9 @@ module.exports = {
         ]
     },
     plugins: [
-        new ExtractTextPlugin('styles.css')
+        new webpack.ProvidePlugin({
+            Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
+            fetch: 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch'
+        })
     ]
 }

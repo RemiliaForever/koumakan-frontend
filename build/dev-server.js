@@ -1,33 +1,41 @@
-const path = require('path')
-const fs = require('fs')
-const argv = require('optimist').argv
-const express = require('express')
-const webpack = require('webpack')
-const config = require('../config')
-const opn = require('opn')
-const proxyMiddleware = require('http-proxy-middleware')
-const webpackConfig = process.env.NODE_ENV === 'testing'
+require('./check-versions')()
+
+let config = require('../config')
+if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
+}
+
+let fs = require('fs')
+let opn = require('opn')
+let path = require('path')
+let express = require('express')
+let webpack = require('webpack')
+let argv = require('optimist').argv
+let proxyMiddleware = require('http-proxy-middleware')
+let webpackConfig = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')
     ? require('./webpack.prod.conf')
     : require('./webpack.dev.conf')
 
 // default port where dev server listens for incoming traffic
-const port = process.env.PORT || config.dev.port
+let port = process.env.PORT || config.dev.port
+// automatically open browser, if not set will be false
+let autoOpenBrowser = !!config.dev.autoOpenBrowser
 // Define HTTP proxies to your custom API backend
 // https://github.com/chimurai/http-proxy-middleware
-// var proxyTable = config.dev.proxyTable
+let proxyTable = config.dev.proxyTable
 
-const app = express()
-const compiler = webpack(webpackConfig)
+let app = express()
+let compiler = webpack(webpackConfig)
 
-const devMiddleware = require('webpack-dev-middleware')(compiler, {
+let devMiddleware = require('webpack-dev-middleware')(compiler, {
     publicPath: webpackConfig.output.publicPath,
-    stats: {
-        colors: true,
-        chunks: false
-    }
+    quiet: true
 })
 
-const hotMiddleware = require('webpack-hot-middleware')(compiler)
+let hotMiddleware = require('webpack-hot-middleware')(compiler, {
+    log: false,
+    heartbeat: 2000
+})
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function(compilation) {
     compilation.plugin('html-webpack-plugin-after-emit', function(data, cb) {
@@ -36,14 +44,14 @@ compiler.plugin('compilation', function(compilation) {
     })
 })
 
-// proxy api requests
+// // proxy api requests
 // Object.keys(proxyTable).forEach(function (context) {
-//   var options = proxyTable[context]
-//   if (typeof options === 'string') {
-//     options = { target: options }
-//   }
-//   app.use(proxyMiddleware(context, options))
-// });
+//     var options = proxyTable[context]
+//     if (typeof options === 'string') {
+//         options = { target: options }
+//     }
+//     app.use(proxyMiddleware(options.filter || context, options))
+// })
 
 // mock/proxy api requests
 const mockDir = path.resolve(__dirname, '../mock');
@@ -62,9 +70,7 @@ const mockDir = path.resolve(__dirname, '../mock');
 })(mockDir)
 
 // handle fallback for HTML5 history API
-app.use(require('connect-history-api-fallback')({
-    index: '/index.html'
-}))
+app.use(require('connect-history-api-fallback')())
 
 // serve webpack bundle output
 app.use(devMiddleware)
@@ -74,15 +80,31 @@ app.use(devMiddleware)
 app.use(hotMiddleware)
 
 // serve pure static assets
-const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
+let staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-module.exports = app.listen(port, '0.0.0.0', function(err) {
-    if (err) {
-        console.log(err)
-        return
-    }
-    const uri = 'http://0.0.0.0:' + port
-    console.log('Dev server listening at ' + uri + '\n')
-    opn(uri)
+let uri = 'http://localhost:' + port
+
+let _resolve
+let readyPromise = new Promise(resolve => {
+    _resolve = resolve
 })
+
+console.log('> Starting dev server...')
+devMiddleware.waitUntilValid(() => {
+    console.log('> Listening at ' + uri + '\n')
+    // when env is testing, don't need open it
+    if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
+        opn(uri)
+    }
+    _resolve()
+})
+
+let server = app.listen(port)
+
+module.exports = {
+    ready: readyPromise,
+    close: () => {
+        server.close()
+    }
+}

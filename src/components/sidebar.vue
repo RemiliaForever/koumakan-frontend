@@ -65,10 +65,8 @@
             }
         },
         async mounted() {
-            let res = await fetch('/api/getArchive', {method: 'POST'})
-            this.archive = await res.json()
-            res = await fetch('/api/getLabel', {method: 'POST'})
-            this.label = await res.json()
+            this.archive = await this.post('/api/getArchive', {method: 'POST'})
+            this.label = await this.post('/api/getLabel', {method: 'POST'})
         }
     }
 </script>

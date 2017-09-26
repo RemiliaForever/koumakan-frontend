@@ -34,52 +34,37 @@
         },
         methods: {
             async getArticleList() {
-                let p = this.$route.path.split('/')
-                const response = await fetch('/api/getArticleList', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        typestring: p[1],
-                        param: p[2],
-                        offset: this.offset
-                    })
-                })
-                this.articles = await response.json()
                 this.offset = 0
-                switch (p[1]) {
+                this.articles = await this.post('/api/getArticleList', {
+                    typestring: this.$route.params.typestring,
+                    param: this.$route.params.param,
+                    offset: this.offset
+                })
+                let param = this.$route.params.param
+                switch (param) {
                     case 'type':
-                        this.$emit('changeTitle', p[2].toUpperCase() + ' 类型下的文章')
+                        this.$emit('changeTitle', param.toUpperCase() + ' 类型下的文章')
                         break
                     case 'label':
-                        this.$emit('changeTitle', p[2] + ' 标签下的文章')
+                        this.$emit('changeTitle', param + ' 标签下的文章')
                         break
                     case 'archive':
-                        this.$emit('changeTitle', p[2] + ' 的归档文档')
+                        this.$emit('changeTitle', param + ' 的归档文档')
                         break
                     case 'search':
-                        this.$emit('changeTitle', p[2] + ' 的搜索结果')
+                        this.$emit('changeTitle', param + ' 的搜索结果')
                         break
                     default:
-                        this.$emit('changeTitle', 'Welcome to Koumakan')
+                        // this.$router.push('/notfound')
                 }
             },
             async getMoreArticle() {
-                let p = this.$route.path.split('/')
                 this.offset += 1
-                const response = await fetch('/api/getArticleList', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        typestring: p[1],
-                        param: p[2],
-                        offset: this.offset
-                    })
-                })
-                this.articles = this.articles.concat(await response.json())
+                this.articles = this.articles.concat(await post('/api/getArticleList', {
+                    typestring: this.$route.params.typestring,
+                    param: this.$route.params.param,
+                    offset: this.offset
+                }))
             }
         },
         mounted() {

@@ -28,6 +28,16 @@ const router = new VueRouter({
     routes: routes
 })
 
+// 全局注册post接口
+Vue.prototype.post = async (url, json) => {
+    let response = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(json)
+    })
+    return await response.json()
+}
+
 window.__lendApp__ = new Vue({
     el: '#app',
     router,

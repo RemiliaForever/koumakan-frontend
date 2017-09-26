@@ -8,11 +8,8 @@ const rootPath = ''
 // 页面路由
 const routes = [
     {path: '/', component: Index},
-    {path: '/type/:type', component: Index},
-    {path: '/label/:label', component: Index},
-    {path: '/archive/:date', component: Index},
-    {path: '/search/:param', component: Index},
-    {path: '/article/:id', component: Article}
+    {path: '/article/:id', component: Article},
+    {path: '/:typestring/:param', component: Index}
 ].map(route => {
     route.path = rootPath + route.path
     return route

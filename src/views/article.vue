@@ -16,12 +16,16 @@
             <div id="content"/>
             <mu-divider/>
             <mu-flexbox class="nav" justify="space-between" wrap="wrap">
-                <mu-flat-button :disabled="buttonPre.target == null" :target="buttonPre.target" primary>{{ buttonPre.text }}</mu-flat-button>
-                <mu-flat-button :disabled="buttonNext.target == null" :target="buttonNext.target" primary>{{ buttonNext.text }}</mu-flat-button>
+                <mu-flat-button :disabled="buttonNav.pre.id <= 0" :to="buttonNav.pre.id>0?'/article/'+buttonNav.pre.id:null" primary>
+                    上一篇：{{ buttonNav.pre.title }}
+                </mu-flat-button>
+                <mu-flat-button :disabled="buttonNav.next.id <= 0" :to="buttonNav.next.id>0?'/article/'+buttonNav.next.id:null" primary>
+                    下一篇：{{ buttonNav.next.title }}
+                </mu-flat-button>
             </mu-flexbox>
         </mu-paper>
         <mu-paper class="comment-list" v-if="comments.length>0">
-            <p style="font-size: 22px; margin: 0 0 5px 5px">
+            <p class="title">
                 评论列表
             </p>
             <div v-for="(comment,index) in comments">
@@ -44,140 +48,99 @@
             <mu-text-field v-model.trim="formData.name" label="昵称*" labelFloat /><br/>
             <mu-text-field v-model.trim="formData.email" label="电子邮件*" type="email" labelFloat /><br/>
             <mu-text-field v-model.trim="formData.website" label="站点" type="url" labelFloat/><br/>
-            <mu-raised-button label="提交评论" icon="send" labelPosition="before" secondary :disabled="buttonSubbmitDisabled"/>
+            <mu-raised-button label="提交评论" icon="send" labelPosition="before" secondary
+                :disabled="buttonSubbmitDisabled" @click="addComment"/>
         </mu-paper>
     </div>
 </template>
 
 <script>
-
-// markdown 和 highlight 支持
-import marked from 'marked'
-import 'highlight.js/styles/github.css'
-marked.setOptions({
-    renderer: new marked.Renderer(),
-    gfm: true,
-    tables: true,
-    breaks: false,
-    pedantic: false,
-    sanitize: false,
-    smartLists: true,
-    smartypants: false,
-    highlight: function(code) {
-        return require('highlight.js').highlightAuto(code).value
-    }
-})
-export default {
-    data() {
-        return {
-            article: {
-                title: '载入中',
-                brief: '',
-                content: '',
-                type: 'unknown',
-                labels: '',
-                date: '0000-00-00 00:00:00'
-            },
-            comments: [],
-            buttonPre: {
-                target: null,
-                text: '上一篇：载入中...'
-            },
-            buttonNext: {
-                target: null,
-                text: '下一篇：载入中...'
-            },
-            formData: {
-                content: '',
-                name: '',
-                email: '',
-                website: ''
+    // markdown 和 highlight 支持
+    import marked from 'marked'
+    import 'highlight.js/styles/github.css'
+    marked.setOptions({
+        renderer: new marked.Renderer(),
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false,
+        highlight: function(code) {
+            return require('highlight.js').highlightAuto(code).value
+        }
+    })
+    export default {
+        data() {
+            return {
+                article: {
+                    title: '载入中',
+                    brief: '',
+                    content: '',
+                    type: 'unknown',
+                    labels: '',
+                    date: '0000-00-00 00:00:00'
+                },
+                comments: [],
+                buttonNav: {
+                    pre: {id: -1, title: '载入中...'},
+                    next: {id: -1, title: '载入中...'}
+                },
+                formData: {
+                    content: '',
+                    name: '',
+                    email: '',
+                    website: ''
+                }
             }
-        }
-    },
-    watch: {
-        '$route'(to, from) {
-            this.getData()
-        }
-    },
-    computed: {
-        buttonSubbmitDisabled: function() {
-            let form = this.formData
-            return form.content == '' ||
+        },
+        watch: {
+            '$route'(to, from) {
+                this.getData()
+            }
+        },
+        computed: {
+            buttonSubbmitDisabled: function() {
+                let form = this.formData
+                return form.content == '' ||
                 form.name == '' ||
                 form.email == ''
-        }
-    },
-    methods: {
-        async getData() {
-            let id = this.$route.path.split('/')[2]
-            this.$emit('changeTitle', '载入中...')
-            // get article
-            let response = await fetch('/api/getArticle', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: id
-                })
-            })
-            this.article = await response.json()
-            this.$emit('changeTitle', this.article.title)
-            // render
-            let content = document.getElementById('content')
-            let data = '' +
-                'Rust是一门专注于安全、速度和并发的编程语言。它设计为高性能、底层控制，同时提供高级语言的强大抽象能力。' +
-                '这些特点使得Rust适合有类C语言经验，正寻求一门更安全的语言的开发者，同时也适合有类Python语言经验，需求更好性能的开发者。   ' +
-'\n\nRust多数情况下在编译期进行安全检查和内存管理决策，因此运行时性能几乎没有损失。这使得Rust在一些其他编程语言不擅长的领域大显身手：' +
-                '空间和时间有限，嵌入其他语言，编写底层代码（驱动和操作系统）。Rust也擅长web应用，它驱动着Rust包管理网站。   ' +
-'\n## 开发环境配置' +
-'\n配置好vundle并安装YouCompleteMe   ' +
-'\n\n安装rust，cargo；   ' +
-'\n\n安装rust-src，YouCompleteMe补全需要；   ' +
-'\n\n安装rustfmt，用以格式化代码（可选）；   ' +
-'\n\nYouCompleteMe在编译时开启 --racer-completer 参数，启用rust补全； ' +
-'\n\n> YouCompleteMe在编译时开启 --racer-completer 参数，启用rust补全； ' +
-'\n\n>> YouCompleteMe在编译时开启 --racer-completer 参数，启用rust补全； ' +
-'\n\n在vimrc中添加补全配置：   ' +
-'\n``` vimrc  ' +
-'\nlet g:ycm_rust_src_path = "/usr/src/rust/src"   ' +
-'\n```  ' +
-'\n在vimrc中添加代码格式化配置（可选）：   ' +
-'\n``` vimrc  ' +
-'\nautocmd FileType rust map <buffer> <F3> :!rustfmt --write-mode overwrite %<CR><CR>   ' +
-'\n```  ' +
-'\n## Cargo介绍   ' +
-'\nCargo是rust的包管理器，类似于npm与node.js，同时也是Rust的项目构建工具，由Rust编写而成。Cargo会将依赖库下载至~/.cargo下。   ' +
-'\n先挖坑，再填坑...'
-            content.innerHTML = marked(data)
-            // get nav
-            this.buttonPre = {
-                target: '/article/0',
-                text: '上一篇: Rust'
             }
-            this.buttonNext = {
-                target: '/article/2',
-                text: '下一篇: Rust'
-            }
-
-            // get comment
-            response = await fetch('/api/getComment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: id
+        },
+        methods: {
+            async getData() {
+                let id = this.$route.params.id
+                this.$emit('changeTitle', '载入中...')
+                // get article
+                this.article = await this.post('/api/getArticle', {id: id})
+                this.$emit('changeTitle', this.article.title)
+                // render
+                let content = document.getElementById('content')
+                content.innerHTML = marked(this.article.content)
+                // get nav
+                this.buttonNav = await this.post('/api/getArticleNav', {id: id})
+                // get comment
+                this.comments = await this.post('/api/getComments', {id: id})
+            },
+            async addComment() {
+                await this.post('/api/addComment', {
+                    article_id: this.$route.params.id,
+                    name: this.formData.name,
+                    email: this.formData.email,
+                    website: this.formData.website,
+                    content: this.formData.content,
+                    avatar: '',
+                    date: ''
                 })
-            })
-            this.comments = await response.json()
+                // refresh comment
+                this.comments = await this.post('/api/getComments', {id: id})
+            }
+        },
+        mounted() {
+            this.getData()
         }
-    },
-    mounted() {
-        this.getData()
     }
-}
 </script>
 
 <style lang="scss">
@@ -187,6 +150,7 @@ export default {
             text-align: center;
             font-size: 32px;
             margin: 0px;
+            font-weight: 500;
         }
         .brief {
             font-size: 14px;
@@ -205,7 +169,7 @@ export default {
         margin-top: 12px;
         padding-left: 12px;
         padding-right: 12px;
-        & > button {
+        & > * {
             padding-left: 16px;
             padding-right: 16px;
             flex: none;
@@ -214,6 +178,10 @@ export default {
     .comment-list {
         margin-top: 25px;
         padding: 25px;
+        .title {
+            font-size: 22px;
+            margin: 0 0 5px 5px;
+        }
     }
     .form {
         margin-top: 25px;
@@ -262,8 +230,7 @@ export default {
         }
 
         h1,h2,h3,h4,h5,h6 {
-            font-weight: 400;
-            text-shadow: 1px 1px 2px #333333;
+            font-weight: 500;
         }
 
         pre {

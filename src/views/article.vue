@@ -50,70 +50,87 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                article: {
-                    title: '载入中',
-                    brief: '',
-                    content: '',
-                    type: 'unknown',
-                    labels: '',
-                    date: '0000-00-00 00:00:00'
-                },
-                comments: [],
-                buttonPre: {
-                    target: null,
-                    text: '上一篇：载入中...'
-                },
-                buttonNext: {
-                    target: null,
-                    text: '下一篇：载入中...'
-                },
-                formData: {
-                    content: '',
-                    name: '',
-                    email: '',
-                    website: ''
-                }
+
+// markdown 和 highlight 支持
+import marked from 'marked'
+import 'highlight.js/styles/github.css'
+marked.setOptions({
+    renderer: new marked.Renderer(),
+    gfm: true,
+    tables: true,
+    breaks: false,
+    pedantic: false,
+    sanitize: false,
+    smartLists: true,
+    smartypants: false,
+    highlight: function(code) {
+        return require('highlight.js').highlightAuto(code).value
+    }
+})
+export default {
+    data() {
+        return {
+            article: {
+                title: '载入中',
+                brief: '',
+                content: '',
+                type: 'unknown',
+                labels: '',
+                date: '0000-00-00 00:00:00'
+            },
+            comments: [],
+            buttonPre: {
+                target: null,
+                text: '上一篇：载入中...'
+            },
+            buttonNext: {
+                target: null,
+                text: '下一篇：载入中...'
+            },
+            formData: {
+                content: '',
+                name: '',
+                email: '',
+                website: ''
             }
-        },
-        watch: {
-            '$route'(to, from) {
-                this.getData()
-            }
-        },
-        computed: {
-            buttonSubbmitDisabled: function() {
-                let form = this.formData
-                return form.content == '' ||
-                    form.name == '' ||
-                    form.email == ''
-            }
-        },
-        methods: {
-            async getData() {
-                let id = this.$route.path.split('/')[2]
-                this.$emit('changeTitle', '载入中...')
-                // get article
-                let response = await fetch('/api/getArticle', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: id
-                    })
+        }
+    },
+    watch: {
+        '$route'(to, from) {
+            this.getData()
+        }
+    },
+    computed: {
+        buttonSubbmitDisabled: function() {
+            let form = this.formData
+            return form.content == '' ||
+                form.name == '' ||
+                form.email == ''
+        }
+    },
+    methods: {
+        async getData() {
+            let id = this.$route.path.split('/')[2]
+            this.$emit('changeTitle', '载入中...')
+            // get article
+            let response = await fetch('/api/getArticle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id
                 })
-                this.article = await response.json()
-                this.$emit('changeTitle', this.article.title)
-                // render
-                let content = document.getElementById('content')
-                let data = '' +
-                    'Rust是一门专注于安全、速度和并发的编程语言。它设计为高性能、底层控制，同时提供高级语言的强大抽象能力。' +
-                    '这些特点使得Rust适合有类C语言经验，正寻求一门更安全的语言的开发者，同时也适合有类Python语言经验，需求更好性能的开发者。   ' +
+            })
+            this.article = await response.json()
+            this.$emit('changeTitle', this.article.title)
+            // render
+            let content = document.getElementById('content')
+            let data = '' +
+                'Rust是一门专注于安全、速度和并发的编程语言。它设计为高性能、底层控制，同时提供高级语言的强大抽象能力。' +
+                '这些特点使得Rust适合有类C语言经验，正寻求一门更安全的语言的开发者，同时也适合有类Python语言经验，需求更好性能的开发者。   ' +
 '\n\nRust多数情况下在编译期进行安全检查和内存管理决策，因此运行时性能几乎没有损失。这使得Rust在一些其他编程语言不擅长的领域大显身手：' +
-                    '空间和时间有限，嵌入其他语言，编写底层代码（驱动和操作系统）。Rust也擅长web应用，它驱动着Rust包管理网站。   ' +
+                '空间和时间有限，嵌入其他语言，编写底层代码（驱动和操作系统）。Rust也擅长web应用，它驱动着Rust包管理网站。   ' +
 '\n## 开发环境配置' +
 '\n配置好vundle并安装YouCompleteMe   ' +
 '\n\n安装rust，cargo；   ' +
@@ -133,34 +150,34 @@
 '\n## Cargo介绍   ' +
 '\nCargo是rust的包管理器，类似于npm与node.js，同时也是Rust的项目构建工具，由Rust编写而成。Cargo会将依赖库下载至~/.cargo下。   ' +
 '\n先挖坑，再填坑...'
-                content.innerHTML = this.marked(data)
-                // get nav
-                this.buttonPre = {
-                    target: '/article/0',
-                    text: '上一篇: Rust'
-                }
-                this.buttonNext = {
-                    target: '/article/2',
-                    text: '下一篇: Rust'
-                }
-
-                // get comment
-                response = await fetch('/api/getComment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: id
-                    })
-                })
-                this.comments = await response.json()
+            content.innerHTML = marked(data)
+            // get nav
+            this.buttonPre = {
+                target: '/article/0',
+                text: '上一篇: Rust'
             }
-        },
-        mounted() {
-            this.getData()
+            this.buttonNext = {
+                target: '/article/2',
+                text: '下一篇: Rust'
+            }
+
+            // get comment
+            response = await fetch('/api/getComment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            })
+            this.comments = await response.json()
         }
+    },
+    mounted() {
+        this.getData()
     }
+}
 </script>
 
 <style lang="scss">

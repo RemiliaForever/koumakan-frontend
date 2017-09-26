@@ -8,23 +8,7 @@ import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import 'muse-ui/dist/theme-carbon.css'
 Vue.use(MuseUI)
-// markdown 和 highlight 支持
-import marked from 'marked'
-import 'highlight.js/styles/github.css'
-marked.setOptions({
-    renderer: new marked.Renderer(),
-    gfm: true,
-    tables: true,
-    breaks: false,
-    pedantic: false,
-    sanitize: false,
-    smartLists: true,
-    smartypants: false,
-    highlight: function(code) {
-        return require('highlight.js').highlightAuto(code).value
-    }
-})
-Vue.prototype.marked = marked
+
 // mathjax 支持
 // import MathJax from 'mathjax'
 // Vue.prototype._mathjax = MathJax

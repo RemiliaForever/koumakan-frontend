@@ -30,12 +30,16 @@ const router = new VueRouter({
 
 // 全局注册post接口
 Vue.prototype.post = async (url, json) => {
-    let response = await fetch(url, {
+    return fetch(url, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(json)
+    }).then((response) => {
+        if (response.status>=300) {
+            throw Error('error status')
+        }
+        return response.json()
     })
-    return await response.json()
 }
 
 window.__lendApp__ = new Vue({

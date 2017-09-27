@@ -30,7 +30,7 @@
         props: ['article'],
         methods: {
             getIcon(type) {
-                switch (type) {
+                switch (type.toUpperCase()) {
                     case 'IT': return 'phonelink'
                     case 'ACG': return 'games'
                     case 'DAILY': return 'today'

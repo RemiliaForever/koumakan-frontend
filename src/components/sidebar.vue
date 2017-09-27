@@ -24,14 +24,14 @@
                 <mu-divider/>
                 <mu-list-item title="标签" toggleNested :open="false">
                     <mu-icon slot="left" value="bookmark"/>
-                    <mu-list-item v-for="l in label" :key="l.name" :title="l.name" :to="'/label/'+l.name" slot="nested">
-                        <mu-badge :content="l.count" slot="after"/>
+                    <mu-list-item v-for="l,c in label" :key="c" :title="c" :to="'/label/'+c" slot="nested">
+                        <mu-badge :content="l.toString()" slot="after"/>
                     </mu-list-item>
                 </mu-list-item>
                 <mu-list-item title="文章归档" toggleNested :open="false">
                     <mu-icon slot="left" value="archive"/>
-                    <mu-list-item v-for="a in archive" :key="a.name" :title="a.name" :to="'/archive/'+a.name" slot="nested">
-                        <mu-badge :content="a.count" slot="after"/>
+                    <mu-list-item v-for="a,c in archive" :key="c" :title="c" :to="'/archive/'+c" slot="nested">
+                        <mu-badge :content="a.toString()" slot="after"/>
                     </mu-list-item>
                 </mu-list-item>
                 <mu-divider/>
@@ -60,8 +60,8 @@
         },
         data() {
             return {
-                archive: [],
-                label: []
+                archive: {},
+                label: {}
             }
         },
         async mounted() {

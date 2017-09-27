@@ -4,7 +4,11 @@
         <article-card v-for="article in articles" :article="article" :key="article.date"/>
     </div>
     <div v-else>
-        Not Article Found
+        <mu-paper style="padding:25px;">
+            <p style="font-size: 26px; text-align: center">
+                未找到相关文章。
+            </p>
+        </mu-paper>
     </div>
 </template>
 
@@ -37,29 +41,29 @@
                 let param = this.$route.params.param
                 if (!this.$route.params.typestring) {
                     this.$emit('changeTitle', 'Welcome to Koumakan')
-                    return
-                }
-                switch (this.$route.params.typestring) {
-                    case 'type':
-                        this.$emit('changeTitle', param.toUpperCase() + ' 类型下的文章')
-                        break
-                    case 'label':
-                        this.$emit('changeTitle', param + ' 标签下的文章')
-                        break
-                    case 'archive':
-                        this.$emit('changeTitle', param + ' 的归档文档')
-                        break
-                    case 'search':
-                        this.$emit('changeTitle', param + ' 的搜索结果')
-                        break
-                    default:
-                        this.$router.push('/notfound')
+                } else {
+                    switch (this.$route.params.typestring) {
+                        case 'type':
+                            this.$emit('changeTitle', param.toUpperCase() + ' 类型下的文章')
+                            break
+                        case 'label':
+                            this.$emit('changeTitle', param + ' 标签下的文章')
+                            break
+                        case 'archive':
+                            this.$emit('changeTitle', param + ' 的归档文档')
+                            break
+                        case 'search':
+                            this.$emit('changeTitle', param + ' 的搜索结果')
+                            break
+                        default:
+                            this.$router.push('/notfound')
+                    }
                 }
                 this.offset = 0
                 this.articles = await this.post('/api/getArticleList', {
                     typestring: this.$route.params.typestring,
                     param: this.$route.params.param,
-                    offset: this.offset
+                    offset: this.offset.toString()
                 })
             },
             async getMoreArticle() {

@@ -90,18 +90,20 @@ module.exports = [
             }
             let data = []
             data.push(a)
+            data.push(a)
+            data.push(a)
+            data.push(a)
+            data.push(a)
+            data.push(a)
             res.type('json')
             res.send(data)
         }
     }, {
         api: '/api/getLabel',
         response: (req, res) => {
-            let data = []
+            let data = {}
             for (let i=0; i<20; i++) {
-                data.push({
-                    name: Random.cword(2, 6),
-                    count: Random.integer(0, 100).toString()
-                })
+                data[Random.cword(2, 6)] = Random.integer(0, 100).toString()
             }
             res.type('json')
             res.send(data)
@@ -109,15 +111,17 @@ module.exports = [
     }, {
         api: '/api/getArchive',
         response: (req, res) => {
-            let data = []
+            let data = {}
             for (let i=0; i<20; i++) {
-                data.push({
-                    name: Random.date('yyyy-MM'),
-                    count: Random.integer(0, 100).toString()
-                })
+                data[Random.date('yyyy-MM')] = Random.integer(0, 100).toString()
             }
             res.type('json')
             res.send(data)
+        }
+    }, {
+        api: '/api/addComment',
+        response: (req, res) => {
+            res.send('asdf')
         }
     }
 ]

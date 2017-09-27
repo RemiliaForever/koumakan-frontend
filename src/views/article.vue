@@ -28,12 +28,14 @@
             <p class="title">
                 评论列表
             </p>
-            <div v-for="(comment,index) in comments">
+            <div v-for="comment,index in comments">
                 <mu-divider/>
-                <img class="c-avatar" :src="comment.avatar"/>
-                <a class="c-name" :href="comment.website">{{ comment.name }}</a>
-                <span class="c-date">#{{ index + 1 }} {{ comment.date }}</span>
-                <p class="c-content">{{ comment.content }}</p>
+                <div class="c-item">
+                    <img class="c-avatar" :src="comment.avatar"/>
+                    <a class="c-name" :href="comment.website">{{ comment.name }}</a>
+                    <span class="c-date">#{{ index + 1 }}&nbsp;&nbsp;{{ comment.date }}</span>
+                    <p class="c-content">{{ comment.content }}</p>
+                </div>
             </div>
         </mu-paper>
         <mu-paper class="comment-list" v-else>
@@ -48,8 +50,11 @@
             <mu-text-field v-model.trim="formData.name" label="昵称*" labelFloat /><br/>
             <mu-text-field v-model.trim="formData.email" label="电子邮件*" type="email" labelFloat /><br/>
             <mu-text-field v-model.trim="formData.website" label="站点" type="url" labelFloat/><br/>
-            <mu-raised-button label="提交评论" icon="send" labelPosition="before" secondary
-                :disabled="buttonSubbmitDisabled" @click="addComment"/>
+            <mu-raised-button :label="buttonSubbmit.text" labelPosition="before" secondary
+                :disabled="buttonSubbmitDisabled" @click="addComment">
+                <mu-icon v-if="!buttonSubbmit.isSending" value="send"/>
+                <mu-circular-progress v-else :size="24"/>
+            </mu-raised-button>
         </mu-paper>
     </div>
 </template>
@@ -92,6 +97,11 @@
                     name: '',
                     email: '',
                     website: ''
+                },
+                buttonSubbmit: {
+                    isSending: false,
+                    isSent: false,
+                    text: '提交评论'
                 }
             }
         },
@@ -104,8 +114,10 @@
             buttonSubbmitDisabled: function() {
                 let form = this.formData
                 return form.content == '' ||
-                form.name == '' ||
-                form.email == ''
+                    form.name == '' ||
+                    form.email == '' ||
+                    this.buttonSubbmit.isSending ||
+                    this.buttonSubbmit.isSent
             }
         },
         methods: {
@@ -114,6 +126,9 @@
                 this.$emit('changeTitle', '载入中...')
                 // get article
                 this.article = await this.post('/api/getArticle', {id: id})
+                if (!this.article || this.article.id < 0) {
+                    this.$router.push('/notfound')
+                }
                 this.$emit('changeTitle', this.article.title)
                 // render
                 let content = document.getElementById('content')
@@ -124,17 +139,28 @@
                 this.comments = await this.post('/api/getComments', {id: id})
             },
             async addComment() {
-                await this.post('/api/addComment', {
-                    article_id: this.$route.params.id,
-                    name: this.formData.name,
-                    email: this.formData.email,
-                    website: this.formData.website,
-                    content: this.formData.content,
-                    avatar: '',
-                    date: ''
-                })
-                // refresh comment
-                this.comments = await this.post('/api/getComments', {id: id})
+                let id = this.$route.params.id
+                this.buttonSubbmit.isSending = true
+                this.buttonSubbmit.text = '发送中'
+                try {
+                    await this.post('/api/addComment', {
+                        article_id: parseInt(this.$route.params.id),
+                        name: this.formData.name,
+                        email: this.formData.email,
+                        website: this.formData.website,
+                        content: this.formData.content,
+                        avatar: '',
+                        date: ''
+                    })
+                    this.buttonSubbmit.isSending = false
+                    this.buttonSubbmit.isSent = true
+                    this.buttonSubbmit.text = '已发送'
+                    // refresh comment
+                    this.comments = await this.post('/api/getComments', {id: id})
+                } catch (error) {
+                    this.buttonSubbmit.isSending = false
+                    this.buttonSubbmit.text = '重新发送'
+                }
             }
         },
         mounted() {
@@ -182,6 +208,34 @@
             font-size: 22px;
             margin: 0 0 5px 5px;
         }
+        .c-item{
+            padding: 8px;
+            position: relative;
+            .c-avatar {
+                border-radius: 20%;
+                border: lightgrey solid 2px;
+                width: 56px;
+                height: 56px;
+            }
+            .c-name {
+                font-size: 16px;
+                color: #474a4f;
+                position: absolute;
+                left: 72px;
+                top: 10px;
+            }
+            .c-date {
+                font-size: 14px;
+                color: grey;
+                position: absolute;
+                left: 72px;
+                top: 46px;
+            }
+            .c-content {
+                font-size: 14px;
+                padding: 0 8px;
+            }
+        }
     }
     .form {
         margin-top: 25px;
@@ -221,6 +275,11 @@
     }
     .date {
         margin-right: 10px;
+    }
+    .toast {
+        left: auto;
+        right: auto;
+        bottom: 7%;
     }
 
     #content {

@@ -21,7 +21,7 @@
                     title: '载入中...',
                     brief: '',
                     content: '',
-                    type: 'unknown',
+                    typestring: 'unknown',
                     labels: '',
                     date: '0000-00-00 00:00:00'
                 }],

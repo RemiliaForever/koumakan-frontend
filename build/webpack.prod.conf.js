@@ -32,10 +32,13 @@ let webpackConfig = merge(baseWebpackConfig, {
             'process.env': env
         }),
         new webpack.optimize.UglifyJsPlugin({
+            parallel: true,
+            warnings: false,
+            sourceMap: false,
             compress: {
+                drop_console: true,
                 warnings: false
-            },
-            sourceMap: true
+            }
         }),
         // extract css into its own file
         new ExtractTextPlugin({

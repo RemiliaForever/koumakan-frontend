@@ -1,5 +1,4 @@
 let path = require('path')
-let webpack = require('webpack')
 let utils = require('./utils')
 let config = require('../config')
 let vueLoaderConfig = require('./vue-loader.conf')
@@ -77,10 +76,5 @@ module.exports = {
             }
         ]
     },
-    plugins: [
-        new webpack.ProvidePlugin({
-            Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
-            fetch: 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch'
-        })
-    ]
+    plugins: []
 }

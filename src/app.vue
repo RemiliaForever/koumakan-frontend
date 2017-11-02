@@ -24,9 +24,10 @@
     }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
     #app {
         width: 100%;
         height: 100%;
+        flex: 1;
     }
 </style>

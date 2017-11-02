@@ -48,7 +48,7 @@ document.body.addEventListener('click', function(event) {
     if ((element.tagName in tags)) {
         setTimeout(function() {
             element.scrollIntoViewIfNeeded()
-            // console.log('scrollIntoViewIfNeeded');
+            console.log('scrollIntoViewIfNeeded')
         }, 400)
     }
 }, false)

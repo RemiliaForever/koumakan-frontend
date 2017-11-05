@@ -6,11 +6,9 @@ import App from './app'
 import routes from './routes'
 Vue.use(VueRouter)
 
-import MuseUI from 'muse-ui'
-import 'muse-ui/dist/muse-ui.css'
-import 'muse-ui/dist/theme-carbon.css'
-Vue.use(MuseUI)
-
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.css'
+Vue.use(VueMaterial)
 // 创建一个路由对象用于管理页面的路由
 const router = new VueRouter({
     mode: 'history',

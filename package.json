@@ -15,8 +15,8 @@
         "highlight.js": "^9.12.0",
         "marked": "^0.3.6",
         "mathjax": "^2.7.2",
-        "muse-ui": "^2.1.0",
         "vue": "^2.5.2",
+        "vue-material": "^0.8.1",
         "vue-router": "^3.0.1"
     },
     "devDependencies": {

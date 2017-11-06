@@ -1,7 +1,5 @@
 <template>
-    <div id="app">
-        <router-view class="content-view" @changeTitle="changeTitle"/>
-    </div>
+    <router-view/>
 </template>
 
 <script>
@@ -24,7 +22,7 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     #app {
         width: 100%;
         height: 100%;

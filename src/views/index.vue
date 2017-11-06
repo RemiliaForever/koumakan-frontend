@@ -1,6 +1,9 @@
 <template>
     <div>
-        <md-icon md-iconset="fa fa-home"/>
+        <md-icon>home</md-icon>
         <router-view/>
+        <md-button class="md-accent">
+            asdfasfd
+        </md-button>
     </div>
 </template>

@@ -11,6 +11,7 @@ const routes = [
     {path: '/catagory/:param', component: Index},
     {path: '/label/:param', component: Index},
     {path: '/archive/:param', component: Index},
+    {path: '/search', component: Index},
     {path: '/search/:param', component: Index},
     {path: '/admin', component: Index, children: [
         {path: '', component: Index},

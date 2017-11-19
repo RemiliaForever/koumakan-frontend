@@ -6,7 +6,8 @@ const rootPath = ''
 
 // 页面路由
 const routes = [
-    {path: '/', component: Index},
+    {path: '/', redirect: '/home'},
+    {path: '/home', component: Index},
     {path: '/article/:id', component: Index},
     {path: '/catagory/:param', component: Index},
     {path: '/label/:param', component: Index},

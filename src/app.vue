@@ -2,7 +2,7 @@
     <div id="app">
         <md-sidenav class="md-left md-fixed main-sidebar" md-swipeable ref="sidebar">
             <header>
-                <img src="static/img/avatar.jpg" alt="RemiliaForever">
+                <img src="/static/img/avatar.jpg" alt="RemiliaForever">
                 <span class="md-headline">RemiliaForever</span>
             </header>
             <nav>
@@ -12,13 +12,13 @@
                         <md-divider/>
                     </md-list-item>
                     <md-list-item>
-                        <router-link to="/type/it"><md-icon>phonelink</md-icon><span>IT技术</span></router-link>
+                        <router-link to="/catagory/it"><md-icon>phonelink</md-icon><span>IT技术</span></router-link>
                     </md-list-item>
                     <md-list-item>
-                        <router-link to="/type/acg"><md-icon>games</md-icon><span>ACG见闻</span></router-link>
+                        <router-link to="/catagory/acg"><md-icon>games</md-icon><span>ACG见闻</span></router-link>
                     </md-list-item>
                     <md-list-item>
-                        <router-link to="/type/daily"><md-icon>today</md-icon><span>生活琐记</span></router-link>
+                        <router-link to="/catagory/daily"><md-icon>today</md-icon><span>生活琐记</span></router-link>
                         <md-divider/>
                     </md-list-item>
                     <md-list-item>
@@ -28,8 +28,8 @@
                             <md-list>
                                 <md-list-item>
                                     <router-link to="/label/1">
-                                        <span class="left">阿达发射的法</span>
-                                        <span class="right">12</span>
+                                        <span class="label">阿达发射的法</span>
+                                        <span class="chip">12</span>
                                     </router-link>
                                 </md-list-item>
                             </md-list>
@@ -42,8 +42,8 @@
                             <md-list>
                                 <md-list-item>
                                     <router-link to="/archive/1">
-                                        <span class="left">阿达发射的法</span>
-                                        <span class="right">12</span>
+                                        <span class="label">阿达发射的法</span>
+                                        <span class="chip">12</span>
                                     </router-link>
                                 </md-list-item>
                             </md-list>
@@ -62,18 +62,18 @@
                 </md-list>
             </nav>
         </md-sidenav>
-        <md-whiteframe md-elevation="2">
-            <md-toolbar class="main-toolbar">
+        <md-whiteframe md-elevation="1">
+            <md-toolbar class="main-toolbar" md-theme="white">
                 <md-button class="md-icon-button toggle-button" @click="$refs.sidebar.toggle()">
                     <md-icon>menu</md-icon>
                 </md-button>
                 <h2 class="md-title" style="flex: 1">Dense</h2>
-                <md-button class="md-icon-button">
-                    <md-spinner v-if="isLoading" md-indeterminate class="md-accent" :md-size="24" :md-stroke="4"/>
-                    <router-link v-else to="/search" class="md-raised md-primary"><md-icon>search</md-icon></router-link>
+                <md-button class="md-icon-button md-accent">
+                    <md-spinner v-if="isLoading" md-indeterminate :md-size="24" :md-stroke="4"/>
+                    <md-icon v-else class="md-raised">search</md-icon>
                 </md-button>
-                <md-input-container class="search-field"  md-theme="green">
-                    <md-input placeholder="My nice placeholder"/>
+                <md-input-container class="search-field">
+                    <md-input placeholder="Searching"/>
                 </md-input-container>
 
             </md-toolbar>
@@ -102,19 +102,21 @@
                 document.title = this.title
             }
         },
-        mounted() {
+        beforeMount() {
             this.$material.registerTheme('default', {
-                primary: 'green',
+                primary: 'blue',
                 accent: 'indigo',
                 warn: 'orange',
                 background: 'white'
             })
-            this.$material.registerTheme('green', {
-                primary: 'green',
-                accent: 'blue',
+            this.$material.registerTheme('white', {
+                primary: 'white',
+                accent: 'black',
                 warn: 'orange',
-                background: 'green'
+                background: 'white'
             })
+        },
+        mounted() {
         }
     }
 </script>
@@ -143,7 +145,7 @@
                 top: 0;
                 pointer-events: auto;
                 transform: translate3d(0, 0, 0) !important;
-                box-shadow: $material-shadow-2dp;
+                box-shadow: $material-shadow-3dp;
             }
         }
         header {
@@ -153,21 +155,23 @@
                 width: 96px;
                 border-radius: 50%;
                 margin: 30px auto 20px auto;
+                box-shadow: black 0 0 2px;
             }
             span {
                 display: block;
                 text-align: center;
                 margin-bottom: 12px;
+                color: #474a4f;
             }
         }
         nav {
             overflow-y: auto;
             flex: 1;
 
-            .left {
+            .label {
                 margin-left: 12px;
             }
-            .right {
+            .chip {
                 line-height: 22px;
                 padding: 0 6px 0 6px;
                 margin-right: 6px;
@@ -177,8 +181,6 @@
         }
     }
     .main-toolbar {
-        background-color: #fff !important;
-        color: #000 !important;
         @include desktop {
             margin-left: $sidebar-size;
             padding-left: 20px;
@@ -189,7 +191,11 @@
             }
         }
         .search-field {
-            width: 258px;
+            width: 0px;
+
+            ::focus {
+                width: 258px;
+            }
         }
     }
     main {

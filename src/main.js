@@ -19,17 +19,11 @@ const router = new VueRouter({
 
 // axios
 import axios from 'axios'
-axios.default.responseType = 'json'
+axios.defaults.responseType = 'json'
+// axios.defaults.baseURL = 'https://api.blog.koumakan.cc'
+axios.defaults.baseURL = 'http://localhost:8080'
 
-axios.interceptors.request.use((config)=>{
-    console.log('pre-request')
-    return config
-})
-axios.interceptors.response.use((response)=>{
-    console.log('pre-response')
-    return response
-})
-Vue.prototype.axios = axios
+Vue.prototype.$http = axios
 
 window.__lendApp__ = new Vue({
     el: '#app',

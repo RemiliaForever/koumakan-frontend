@@ -26,10 +26,10 @@
                         <span>标签</span>
                         <md-list-expand>
                             <md-list>
-                                <md-list-item>
-                                    <router-link to="/label/1">
-                                        <span class="label">阿达发射的法</span>
-                                        <span class="chip">12</span>
+                                <md-list-item v-for="(value, key) in archive" :key="key">
+                                    <router-link :to="'/label/' + key">
+                                        <span class="label">{{ key }}</span>
+                                        <span class="chip">{{ value }}</span>
                                     </router-link>
                                 </md-list-item>
                             </md-list>
@@ -40,10 +40,10 @@
                         <span>文章归档</span>
                         <md-list-expand>
                             <md-list>
-                                <md-list-item>
-                                    <router-link to="/archive/1">
-                                        <span class="label">阿达发射的法</span>
-                                        <span class="chip">12</span>
+                                <md-list-item v-for="(value, key) in archive" :key="key">
+                                    <router-link :to="'/archive/' + key">
+                                        <span class="label">{{ key }}</span>
+                                        <span class="chip">{{ value }}</span>
                                     </router-link>
                                 </md-list-item>
                             </md-list>
@@ -67,15 +67,15 @@
                 <md-button class="md-icon-button toggle-button" @click="$refs.sidebar.toggle()">
                     <md-icon>menu</md-icon>
                 </md-button>
-                <h2 class="md-title" style="flex: 1">Dense</h2>
-                <md-button class="md-icon-button md-accent">
-                    <md-spinner v-if="isLoading" md-indeterminate :md-size="24" :md-stroke="4"/>
+                <h2 class="md-title" style="flex: 1">{{ title }}</h2>
+                <md-button class="md-icon-button md-accent" @click="isFocus = true">
+                    <md-spinner v-if="isLoading.router || isLoading.http || true" md-indeterminate :md-size="24" :md-stroke="4"/>
                     <md-icon v-else class="md-raised">search</md-icon>
                 </md-button>
-                <md-input-container class="search-field">
-                    <md-input placeholder="Searching"/>
+                <md-input-container :focus="isFocus" class="search-field">
+                    <md-input placeholder="Searching..." v-model.trim="searchFieldValue"
+                        v-focus="isFocus" @blur="isFocus = false" @keyup.native.enter="search"/>
                 </md-input-container>
-
             </md-toolbar>
         </md-whiteframe>
         <main>
@@ -92,7 +92,14 @@
         data() {
             return {
                 title: 'Welcome to Koumakan',
-                isLoading: false
+                isLoading: {
+                    http: 0,
+                    router: false
+                },
+                searchFieldValue: '',
+                isFocus: false,
+                labels: {},
+                archive: {}
             }
         },
         methods: {
@@ -100,6 +107,21 @@
                 console.log('change title:' + title)
                 this.title = decodeURI(title)
                 document.title = this.title
+            },
+            search() {
+                this.isFocus = false
+                if (this.searchFieldValue != '') {
+                    this.$router.push('/search/' + this.searchFieldValue)
+                }
+            }
+        },
+        directives: {
+            focus: {
+                update: (el, {value}) => {
+                    if (value) {
+                        el.focus()
+                    }
+                }
             }
         },
         beforeMount() {
@@ -115,14 +137,44 @@
                 warn: 'orange',
                 background: 'white'
             })
+            this.$http.interceptors.request.use(config => {
+                this.isLoading.http ++
+                return config
+            }, err => {
+                if (this.isLoading.http) {
+                    this.isLoading.http --
+                }
+                return Promise.reject(err)
+            })
+            this.$http.interceptors.response.use(response => {
+                if (this.isLoading.http) {
+                    this.isLoading.http --
+                }
+                return response
+            }, err => {
+                if (this.isLoading.http) {
+                    this.isLoading.http --
+                }
+                return Promise.reject(err)
+            })
+            this.$router.beforeEach(() => {
+                this.isLoading.router = true
+            })
+            this.$router.afterEach(() => {
+                this.isLoading.router = false
+            })
         },
         mounted() {
+            this.$http.get('/labels')
+                .then(res => this.labels = res.data)
+            this.$http.get('/archive')
+                .then(res => this.archive = res.data)
         }
     }
 </script>
 
 <style lang="scss">
-    @import '../node_modules/vue-material/src/core/stylesheets/variables.scss';
+    @import '~vue-material/src/core/stylesheets/variables.scss';
 
     $sidebar-size: 256px;
     @mixin desktop {
@@ -138,8 +190,7 @@
     .main-sidebar {
         .md-sidenav-content {
             width: $sidebar-size;
-            display: flex;
-            flex-flow: column;
+            height: 100%;
             overflow: hidden;
             @include desktop {
                 top: 0;
@@ -165,8 +216,8 @@
             }
         }
         nav {
+            height: calc(100% - 178px);
             overflow-y: auto;
-            flex: 1;
 
             .label {
                 margin-left: 12px;
@@ -192,8 +243,10 @@
         }
         .search-field {
             width: 0px;
+            overflow: hidden;
+            transition: width .3s ease;
 
-            ::focus {
+            &[focus] {
                 width: 258px;
             }
         }
@@ -204,6 +257,7 @@
         width: 100%;
         overflow-y: auto;
         padding-top: 6px;
+        background-color: #66ccff;
 
         @include desktop {
             padding-left: $sidebar-size;

@@ -30,12 +30,20 @@ module.exports = [
     }, {
         api: '/archive',
         response: (req, res) => {
-            sendJson(res, {})
+            let data = {}
+            for (let i=0; i<Random.integer(1, 30); i++) {
+                data[Random.cword(2, 10)] = Random.integer(0, 10)
+            }
+            sendJson(res, data)
         }
     }, {
         api: '/labels',
         response: (req, res) => {
-            sendJson(res, {})
+            let data = {}
+            for (let i=0; i<Random.integer(1, 30); i++) {
+                data[Random.cword(2, 10)] = Random.integer(0, 10)
+            }
+            sendJson(res, data)
         }
     }
 ]

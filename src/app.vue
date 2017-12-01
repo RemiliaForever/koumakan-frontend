@@ -9,8 +9,8 @@
                 <md-list>
                     <md-list-item>
                         <router-link to="/home"><md-icon>home</md-icon><span>首页</span></router-link>
-                        <md-divider/>
                     </md-list-item>
+                    <md-divider/>
                     <md-list-item>
                         <router-link to="/catagory/it"><md-icon>phonelink</md-icon><span>IT技术</span></router-link>
                     </md-list-item>
@@ -19,8 +19,8 @@
                     </md-list-item>
                     <md-list-item>
                         <router-link to="/catagory/daily"><md-icon>today</md-icon><span>生活琐记</span></router-link>
-                        <md-divider/>
                     </md-list-item>
+                    <md-divider/>
                     <md-list-item>
                         <md-icon>bookmark</md-icon>
                         <span>标签</span>
@@ -48,8 +48,8 @@
                                 </md-list-item>
                             </md-list>
                         </md-list-expand>
-                        <md-divider/>
                     </md-list-item>
+                    <md-divider/>
                     <md-list-item>
                         <router-link to="/friends"><md-icon>people</md-icon><span>友情链接</span></router-link>
                     </md-list-item>
@@ -69,7 +69,7 @@
                 </md-button>
                 <h2 class="md-title" style="flex: 1">{{ title }}</h2>
                 <md-button class="md-icon-button md-accent" @click="isFocus = true">
-                    <md-spinner v-if="isLoading.router || isLoading.http || true" md-indeterminate :md-size="24" :md-stroke="4"/>
+                    <md-spinner v-if="isLoading.router || isLoading.http" class="md-accent" md-indeterminate :md-size="24" :md-stroke="4"/>
                     <md-icon v-else class="md-raised">search</md-icon>
                 </md-button>
                 <md-input-container :focus="isFocus" class="search-field">
@@ -79,9 +79,11 @@
             </md-toolbar>
         </md-whiteframe>
         <main>
-            <transition name="main">
-                <router-view class="content-view"/>
-            </transition>
+            <div class="content-view">
+                <transition name="">
+                    <router-view/>
+                </transition>
+            </div>
         </main>
     </div>
 </template>
@@ -157,8 +159,9 @@
                 }
                 return Promise.reject(err)
             })
-            this.$router.beforeEach(() => {
+            this.$router.beforeEach((to, from, next) => {
                 this.isLoading.router = true
+                next()
             })
             this.$router.afterEach(() => {
                 this.isLoading.router = false
@@ -229,6 +232,10 @@
                 background-color: #dcdcdc;
                 border-radius: 6px;
             }
+
+            .md-list-item-expand.md-active::before, .md-list-item-expand.md-active::after {
+                background-color: rgba(0, 0, 0, 0);
+            }
         }
     }
     .main-toolbar {
@@ -253,10 +260,9 @@
     }
     main {
         position: fixed;
-        height: 100%;
+        height: calc(100% - 65px);
         width: 100%;
         overflow-y: auto;
-        padding-top: 6px;
         background-color: #66ccff;
 
         @include desktop {
@@ -266,6 +272,9 @@
         .content-view {
             transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
             background-color: #fefefe;
+            padding-top: 6px;
+            padding-bottom: 6px;
+            height: 100%;
         }
         @media(max-width: 980px) {
             .content-view {
@@ -276,19 +285,22 @@
         }
         @media(min-width: 980px) {
             .content-view {
-                margin: auto;
+                margin-left: auto;
+                margin-right: auto;
                 width: 700px;
             }
         }
         @media(min-width: 1280px) {
             .content-view {
-                margin: auto;
+                margin-left: auto;
+                margin-right: auto;
                 width: 900px;
             }
         }
         @media(min-width: 1680px) {
             .content-view {
-                margin: auto;
+                margin-left: auto;
+                margin-right: auto;
                 width: 1200px;
             }
         }

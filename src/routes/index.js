@@ -9,7 +9,7 @@ const rootPath = ''
 const routes = [
     {path: '/', redirect: '/home'},
     {path: '/home', component: Index},
-    {path: '/catagory/:param', component: Index},
+    {path: '/category/:param', component: Index},
     {path: '/label/:param', component: Index},
     {path: '/archive/:param', component: Index},
     {path: '/search', component: Index},

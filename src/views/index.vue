@@ -25,7 +25,8 @@
                     labels: '',
                     date: '0000-00-00 00:00:00'
                 }],
-                offset: 0
+                pagesize: null,
+                offset: null
             }
         },
         components: {
@@ -37,7 +38,7 @@
             }
         },
         methods: {
-            async getArticleList() {
+            getArticleList() {
                 let param = this.$route.params.param
                 if (!this.$route.params.typestring) {
                     this.$emit('changeTitle', 'Welcome to Koumakan')
@@ -60,19 +61,21 @@
                     }
                 }
                 this.offset = 0
-                this.articles = await this.post('/api/getArticleList', {
+                this.$http.get('articles', {
                     typestring: this.$route.params.typestring,
                     param: this.$route.params.param,
-                    offset: this.offset.toString()
-                })
-            },
-            async getMoreArticle() {
-                this.offset += 1
-                this.articles = this.articles.concat(await post('/api/getArticleList', {
-                    typestring: this.$route.params.typestring,
-                    param: this.$route.params.param,
+                    pagesize: this.pagesize,
                     offset: this.offset
-                }))
+                }).then(res => this.articles = res.data)
+            },
+            getMoreArticle() {
+                this.offset += this.pagesize
+                this.$http.get('/articles', {
+                    typestring: this.$route.params.typestring,
+                    param: this.$route.params.param,
+                    pagesize: this.pagesize,
+                    offset: this.offset
+                }).then(res => this.articles.concat(res.data))
             }
         },
         mounted() {

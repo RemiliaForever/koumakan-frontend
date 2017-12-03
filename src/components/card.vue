@@ -1,27 +1,27 @@
 <template>
-    <mu-card class="card">
+    <div class="card">
         <div class="title">
             <router-link :to="'/article/' + article.id">{{ article.title }}</router-link>
         </div>
         <div class="type">
-            <mu-icon :value="getIcon(article.typestring)"/>
+            <md-icon>{{getIcon(article.category)}}</md-icon>
         </div>
-        <mu-card-text>
+        <div>
             {{ article.brief }}
-        </mu-card-text>
-        <mu-divider/>
-        <mu-card-actions class="foot">
+        </div>
+        <md-divider/>
+        <div class="foot">
             <div class="date">
-                <mu-icon value="date_range"/>
+                <md-icon>date_range</md-icon>
                 <span>{{ article.date }}</span>
             </div>
             <div class="labels" v-for="label in article.labels.split(',')">
-                <mu-icon value="turned_in"/>
+                <md-icon>turned_in</md-icon>
                 <router-link :to="'/label/' + label">{{ label }}</router-link>
             </div>
-            <mu-flat-button label="查看全文" primary class="button" :to="'/article/' + article.id"/>
-        </mu-card-actions>
-    </mu-card>
+            <md-button label="查看全文" primary class="button" :to="'/article/' + article.id"/>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -30,6 +30,7 @@
         props: ['article'],
         methods: {
             getIcon(type) {
+                if (!type) return 'help_outline'
                 switch (type.toUpperCase()) {
                     case 'IT': return 'phonelink'
                     case 'ACG': return 'games'

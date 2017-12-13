@@ -21,7 +21,7 @@
                     title: '载入中...',
                     brief: '',
                     content: '',
-                    typestring: 'unknown',
+                    category: 'unknown',
                     labels: '',
                     date: '0000-00-00 00:00:00'
                 }],
@@ -39,22 +39,23 @@
         },
         methods: {
             getArticleList() {
-                let param = this.$route.params.param
-                if (!this.$route.params.typestring) {
+                let value = this.$route.params.value
+                let filter = this.$route.name
+                if (filter === 'home') {
                     this.$emit('changeTitle', 'Welcome to Koumakan')
                 } else {
-                    switch (this.$route.params.typestring) {
-                        case 'type':
-                            this.$emit('changeTitle', param.toUpperCase() + ' 类型下的文章')
+                    switch (filter) {
+                        case 'category':
+                            this.$emit('changeTitle', value.toUpperCase() + ' 类型下的文章')
                             break
                         case 'label':
-                            this.$emit('changeTitle', param + ' 标签下的文章')
+                            this.$emit('changeTitle', value + ' 标签下的文章')
                             break
                         case 'archive':
-                            this.$emit('changeTitle', param + ' 的归档文档')
+                            this.$emit('changeTitle', value + ' 的归档文档')
                             break
                         case 'search':
-                            this.$emit('changeTitle', param + ' 的搜索结果')
+                            this.$emit('changeTitle', value + ' 的搜索结果')
                             break
                         default:
                             this.$router.push('/notfound')
@@ -62,8 +63,8 @@
                 }
                 this.offset = 0
                 this.$http.get('articles', {
-                    typestring: this.$route.params.typestring,
-                    param: this.$route.params.param,
+                    filter: this.$route.params.filter,
+                    value: this.$route.params.value,
                     pagesize: this.pagesize,
                     offset: this.offset
                 }).then(res => this.articles = res.data)
@@ -71,8 +72,8 @@
             getMoreArticle() {
                 this.offset += this.pagesize
                 this.$http.get('/articles', {
-                    typestring: this.$route.params.typestring,
-                    param: this.$route.params.param,
+                    filter: this.$route.params.filter,
+                    value: this.$route.params.value,
                     pagesize: this.pagesize,
                     offset: this.offset
                 }).then(res => this.articles.concat(res.data))

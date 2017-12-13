@@ -8,13 +8,12 @@ const rootPath = ''
 // 页面路由
 const routes = [
     {path: '/', redirect: '/home'},
-    {path: '/home', component: Index},
-    {path: '/category/:param', component: Index},
-    {path: '/label/:param', component: Index},
-    {path: '/archive/:param', component: Index},
-    {path: '/search', component: Index},
-    {path: '/search/:param', component: Index},
-    {path: '/article/:id', component: Article},
+    {path: '/home', name: 'home', component: Index},
+    {path: '/category/:value', name: 'category', component: Index},
+    {path: '/label/:value', name: 'label', component: Index},
+    {path: '/archive/:value', name: 'archive', component: Index},
+    {path: '/search/:value', name: 'search', component: Index},
+    {path: '/article/:id', name: 'article', component: Article},
     {path: '/admin', component: Index, children: [
         {path: '', component: Index},
         {path: 'login', component: Index}

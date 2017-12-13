@@ -3,7 +3,10 @@
         <p class="title">您来到了未知的领域</p>
         <p class="subtitle">Oops! That page can’t be found.</p>
         <div class="search">
-            <mu-text-field v-model.trim="searchFieldValue" hintText="Search..." fullWidth @keyup.native.enter="search"/>
+            <md-input-container md-inline>
+                <label>Searching...</label>
+                <md-input v-model.strim="searchFieldValue" @keyup.native.enter="search"></md-input>
+            </md-input-container>
         </div>
     </md-whiteframe>
 </template>
@@ -31,10 +34,10 @@
     .paper {
         padding: 15px;
         min-height: 500px;
+        background-color: #ffffff;
         .title {
             text-align: center;
             font-size: 32px;
-            margin-bottom: 0px;
         }
         .subtitle {
             text-align: center;
@@ -45,20 +48,9 @@
     }
     .search {
         width: 70%;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 100px;
-        padding-left: 25px;
-        padding-top: 15px;
-        padding-right: 25px;
+        margin: 100px auto;
+        padding: 1px 30px;
         background-color: #ebebeb;
-        border-radius: 25px;
-
-        .mu-text-field-hint {
-            font-size: 24px;
-        }
-        .mu-text-field-input {
-            font-size: 24px;
-        }
+        border-radius: 35px;
     }
 </style>

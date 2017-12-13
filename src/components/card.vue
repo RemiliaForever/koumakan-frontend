@@ -1,12 +1,12 @@
 <template>
-    <div class="card">
+    <md-whiteframe md-elevation="3" class="card">
         <div class="title">
             <router-link :to="'/article/' + article.id">{{ article.title }}</router-link>
         </div>
-        <div class="type">
+        <div class="category">
             <md-icon>{{getIcon(article.category)}}</md-icon>
         </div>
-        <div>
+        <div class="content">
             {{ article.brief }}
         </div>
         <md-divider/>
@@ -19,9 +19,11 @@
                 <md-icon>turned_in</md-icon>
                 <router-link :to="'/label/' + label">{{ label }}</router-link>
             </div>
-            <md-button label="查看全文" primary class="button" :to="'/article/' + article.id"/>
+            <md-button class="md-primary button" @click="$router.push('/article/' + article.id)">
+                查看全文
+            </md-button>
         </div>
-    </div>
+    </md-whiteframe>
 </template>
 
 <script>
@@ -44,44 +46,55 @@
 
 <style lang="scss" scoped>
     .card {
+        background-color: #ffffff;
         margin-top: 25px;
+        a:hover {
+            text-decoration: none;
+        }
     }
     .title {
         padding: 16px;
         a {
             color: #373a3f;
             font-size: 24px;
+            &:hover {
+                color: #373a3f;
+            }
         }
     }
-    .type {
+    .category {
         position: absolute;
         right: 16px;
         top: 16px;
     }
+    .content {
+        padding: 5px 15px;
+    }
     .foot {
         text-align: center;
-        i {
-            position: relative;
-            top: 6px;
-            left: 4px;
-        }
+        line-height: 36px;
         .date, .labels {
             display: inline;
             float: left;
             height: 36px;
-            line-height: 36px;
             color: gray;
             a {
                 color: gray;
             }
         }
         .date {
-            margin-right: 10px;
+            margin: 0 10px;
+        }
+        .labels {
+            margin-right: 5px;
         }
 
         .button {
             display: inline;
             float: right;
+            min-height: 30px;
+            height: 30px;
+            line-height: 30px;
         }
 
         &:after {

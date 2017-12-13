@@ -12,13 +12,13 @@
                     </md-list-item>
                     <md-divider/>
                     <md-list-item>
-                        <router-link to="/catagory/it"><md-icon>phonelink</md-icon><span>IT技术</span></router-link>
+                        <router-link to="/category/it"><md-icon>phonelink</md-icon><span>IT技术</span></router-link>
                     </md-list-item>
                     <md-list-item>
-                        <router-link to="/catagory/acg"><md-icon>games</md-icon><span>ACG见闻</span></router-link>
+                        <router-link to="/category/acg"><md-icon>games</md-icon><span>ACG见闻</span></router-link>
                     </md-list-item>
                     <md-list-item>
-                        <router-link to="/catagory/daily"><md-icon>today</md-icon><span>生活琐记</span></router-link>
+                        <router-link to="/category/daily"><md-icon>today</md-icon><span>生活琐记</span></router-link>
                     </md-list-item>
                     <md-divider/>
                     <md-list-item>
@@ -26,7 +26,7 @@
                         <span>标签</span>
                         <md-list-expand>
                             <md-list>
-                                <md-list-item v-for="(value, key) in archive" :key="key">
+                                <md-list-item v-for="(value, key) in labels" :key="key">
                                     <router-link :to="'/label/' + key">
                                         <span class="label">{{ key }}</span>
                                         <span class="chip">{{ value }}</span>
@@ -80,9 +80,7 @@
         </md-whiteframe>
         <main>
             <div class="content-view">
-                <transition name="">
-                    <router-view/>
-                </transition>
+                <router-view @changeTitle="changeTitle"/>
             </div>
         </main>
     </div>
@@ -263,7 +261,7 @@
         height: calc(100% - 65px);
         width: 100%;
         overflow-y: auto;
-        background-color: #66ccff;
+        background-color: #ebebeb;
 
         @include desktop {
             padding-left: $sidebar-size;
@@ -271,10 +269,9 @@
 
         .content-view {
             transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
-            background-color: #fefefe;
-            padding-top: 6px;
-            padding-bottom: 6px;
-            height: 100%;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            min-height: 100%;
         }
         @media(max-width: 980px) {
             .content-view {

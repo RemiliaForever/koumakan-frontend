@@ -6,6 +6,8 @@ function sendJson(res, data) {
     setTimeout(()=>res.send(data), 1500)
 }
 
+categoryList = ['IT', 'ACG', 'DAILY', 'OTHER']
+
 module.exports = [
     {
         api: '/articles',
@@ -15,10 +17,10 @@ module.exports = [
                 articles.push({
                     id: Random.integer(1, 100),
                     title: Random.cword(1, 30),
-                    brief: Random.cparagraph(1, 200),
-                    category: Random.cword('IT|ACG|DAILY'),
+                    brief: Random.cword(1, 300),
+                    category: categoryList[Random.integer(0, 3)],
                     labels: 'test,asdf,tas',
-                    date: Random.datetime('%Y年%m月%d日 %H:%M:%S')
+                    date: Random.datetime('yyyy年M月d日 H:m:s')
                 })
             }
             sendJson(res, articles)
@@ -31,9 +33,9 @@ module.exports = [
                 title: Random.cword(1, 30),
                 brief: Random.cparagraph(1, 200),
                 content: Random.cparagraph(1, 3000),
-                category: Random.cword('IT|ACG|DAILY'),
+                category: categoryList[Random.integer(0, 3)],
                 labels: 'test,asdf,tas',
-                date: Random.datetime('%Y年%m月%d日 %H:%M:%S')
+                date: Random.datetime('yyyy年M月d日 H:m:s')
             })
         }
     }, {

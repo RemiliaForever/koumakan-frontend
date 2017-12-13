@@ -1,5 +1,5 @@
 <template>
-    <md-whiteframe md-elevation="3" class="card">
+    <md-whiteframe class="card">
         <div class="title">
             <router-link :to="'/article/' + article.id">{{ article.title }}</router-link>
         </div>
@@ -46,7 +46,6 @@
 
 <style lang="scss" scoped>
     .card {
-        background-color: #ffffff;
         margin-top: 25px;
         a:hover {
             text-decoration: none;

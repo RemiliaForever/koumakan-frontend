@@ -1,35 +1,37 @@
 <template>
     <div>
-        <mu-paper class="article">
+        <md-whiteframe class="article">
             <p class="title">{{ article.title }}</p>
-            <mu-flexbox justify="center" wrap="wrap">
+            <div>
                 <div class="date">
-                    <mu-icon value="date_range"/>
+                    <md-icon value="date_range"/>
                     <span>{{ article.date }}</span>
                 </div>
                 <div class="labels" v-for="label in article.labels.split(',')" :key="label">
-                    <mu-icon value="turned_in"/>
+                    <md-icon value="turned_in"/>
                     <router-link :to="'/label/' + label">{{ label }}</router-link>
                 </div>
-            </mu-flexbox>
+            </div>
             <p class="brief">{{ article.brief }}</p>
-            <div id="content"/>
-            <mu-divider/>
-            <mu-flexbox class="nav" justify="space-between" wrap="wrap">
-                <mu-flat-button :disabled="buttonNav.pre.id <= 0" :to="buttonNav.pre.id>0?'/article/'+buttonNav.pre.id:null" primary>
+            <div id="content">
+                {{ article.content }}
+            </div>
+            <md-divider/>
+            <div class="nav">
+                <md-button :disabled="buttonNav.pre.id <= 0" :to="buttonNav.pre.id>0?'/article/'+buttonNav.pre.id:null" primary>
                     上一篇：{{ buttonNav.pre.title }}
-                </mu-flat-button>
-                <mu-flat-button :disabled="buttonNav.next.id <= 0" :to="buttonNav.next.id>0?'/article/'+buttonNav.next.id:null" primary>
+                </md-button>
+                <md-button :disabled="buttonNav.next.id <= 0" :to="buttonNav.next.id>0?'/article/'+buttonNav.next.id:null" primary>
                     下一篇：{{ buttonNav.next.title }}
-                </mu-flat-button>
-            </mu-flexbox>
-        </mu-paper>
-        <mu-paper class="comment-list" v-if="comments.length>0">
+                </md-button>
+            </div>
+        </md-whiteframe>
+        <md-whiteframe class="comment-list" v-if="comments.length>0">
             <p class="title">
                 评论列表
             </p>
             <div v-for="comment,index in comments">
-                <mu-divider/>
+                <md-divider/>
                 <div class="c-item">
                     <img class="c-avatar" :src="comment.avatar"/>
                     <a class="c-name" :href="comment.website">{{ comment.name }}</a>
@@ -37,45 +39,44 @@
                     <p class="c-content">{{ comment.content }}</p>
                 </div>
             </div>
-        </mu-paper>
-        <mu-paper class="comment-list" v-else>
+        </md-whiteframe>
+        <md-whiteframe class="comment-list" v-else>
             <p style="font-size: 22px; text-align: center">
                 目前尚未有评论。
             </p>
-        </mu-paper>
-        <mu-paper class="form">
+        </md-whiteframe>
+        <md-whiteframe class="form">
             <p class="title">发表评论</p>
             <p class="subtitle">电子邮件地址不会被公开</p>
-            <mu-text-field v-model.trim="formData.content" label="评论*" labelFloat fullWidth multiLine :rows="4"/><br/>
-            <mu-text-field v-model.trim="formData.name" label="昵称*" labelFloat /><br/>
-            <mu-text-field v-model.trim="formData.email" label="电子邮件*" type="email" labelFloat /><br/>
-            <mu-text-field v-model.trim="formData.website" label="站点" type="url" labelFloat/><br/>
-            <mu-raised-button :label="buttonSubbmit.text" labelPosition="before" secondary
-                :disabled="buttonSubbmitDisabled" @click="addComment">
-                <mu-icon v-if="!buttonSubbmit.isSending" value="send"/>
-                <mu-circular-progress v-else :size="24"/>
-            </mu-raised-button>
-        </mu-paper>
+            <md-input-container fullwidth>
+                <label>评论</label>
+                <md-textarea required v-model.trim="formData.content" style="min-height: 73px;"/>
+            </md-input-container>
+            <md-input-container>
+                <label>昵称</label>
+                <md-input required v-model.trim="formData.name"/>
+            </md-input-container>
+            <md-input-container>
+                <label>电子邮件</label>
+                <md-input required v-model.trim="formData.email" type="email"/>
+            </md-input-container>
+            <md-input-container>
+                <label>站点</label>
+                <md-input v-model.trim="formData.website" type="url"/>
+            </md-input-container>
+            <md-button class="md-raised md-primary" :disabled="buttonSubbmitDisabled" @click="addComment">
+                <md-icon>send</md-icon>
+                <label>{{ buttonSubbmit.text }}</label>
+            </md-button>
+        </md-whiteframe>
     </div>
 </template>
 
 <script>
-    // markdown 和 highlight 支持
-    import marked from 'marked'
+    // highlight
+    import Hljs from 'highlight.js'
     import 'highlight.js/styles/github.css'
-    marked.setOptions({
-        renderer: new marked.Renderer(),
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: false,
-        smartLists: true,
-        smartypants: false,
-        highlight: function(code) {
-            return require('highlight.js').highlightAuto(code).value
-        }
-    })
+
     export default {
         data() {
             return {
@@ -125,42 +126,46 @@
                 let id = this.$route.params.id
                 this.$emit('changeTitle', '载入中...')
                 // get article
-                this.article = await this.post('/api/getArticle', {id: id})
-                if (!this.article || this.article.id < 0) {
-                    this.$router.push('/notfound')
-                }
-                this.$emit('changeTitle', this.article.title)
-                // render
-                let content = document.getElementById('content')
-                content.innerHTML = marked(this.article.content)
+                this.$http.get('/articles/'+id)
+                    .then(res => {
+                        this.article = res.data
+                        if (!this.article || this.article.id < 0) {
+                            this.$router.push('/notfound')
+                        }
+                        this.$emit('changeTitle', this.article.title)
+                        // render
+                        let blocks = document.getElementById('content').querySelectorAll('pre code')
+                        Hljs.highlightBlock(blocks)
+                    })
                 // get nav
-                this.buttonNav = await this.post('/api/getArticleNav', {id: id})
+                this.$http.get('/articles/'+id+'/nav')
+                    .then(res => this.buttonNav = res.data)
                 // get comment
-                this.comments = await this.post('/api/getComments', {id: id})
+                this.$http.post('/comments/aid/'+id)
+                    .then(res => this.comments = res.data)
             },
-            async addComment() {
+            addComment() {
                 let id = this.$route.params.id
                 this.buttonSubbmit.isSending = true
                 this.buttonSubbmit.text = '发送中'
-                try {
-                    await this.post('/api/addComment', {
-                        article_id: parseInt(this.$route.params.id),
-                        name: this.formData.name,
-                        email: this.formData.email,
-                        website: this.formData.website,
-                        content: this.formData.content,
-                        avatar: '',
-                        date: ''
-                    })
+                this.$http.post('/comments', {
+                    article_id: parseInt(this.$route.params.id),
+                    name: this.formData.name,
+                    email: this.formData.email,
+                    website: this.formData.website,
+                    content: this.formData.content,
+                    avatar: '',
+                    date: ''
+                }).then(res => {
                     this.buttonSubbmit.isSending = false
                     this.buttonSubbmit.isSent = true
                     this.buttonSubbmit.text = '已发送'
                     // refresh comment
-                    this.comments = await this.post('/api/getComments', {id: id})
-                } catch (error) {
+                    this.comments = this.post('/api/getComments', {id: id})
+                }).catch(error=>{
                     this.buttonSubbmit.isSending = false
                     this.buttonSubbmit.text = '重新发送'
-                }
+                })
             }
         },
         mounted() {
@@ -252,7 +257,11 @@
             margin-bottom: 0px;
         }
         & > div {
-            margin-bottom: -4px;
+            max-width: 400px;
+            margin-bottom: 5px;
+        }
+        & > div[fullwidth] {
+            max-width: 100%;
         }
         & > button {
             margin-top: 15px;

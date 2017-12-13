@@ -4,11 +4,11 @@
         <article-card v-for="article in articles" :article="article" :key="article.date"/>
     </div>
     <div v-else>
-        <mu-paper style="padding:25px;">
+        <md-whiteframe style="padding:25px;">
             <p style="font-size: 26px; text-align: center">
                 未找到相关文章。
             </p>
-        </mu-paper>
+        </md-whiteframe>
     </div>
 </template>
 

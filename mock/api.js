@@ -10,6 +10,33 @@ categoryList = ['IT', 'ACG', 'DAILY', 'OTHER']
 
 module.exports = [
     {
+        api: '/articles/:id/nav',
+        response: (req, res) => {
+            sendJson(res, {
+                pre: {
+                    id: req.params.id-1,
+                    title: '没有了'
+                },
+                next: {
+                    id: req.params.id+1,
+                    title: '冈格尼尔，不中的必中之枪'
+                }
+            })
+        }
+    }, {
+        api: '/articles/:id',
+        response: (req, res) => {
+            sendJson(res, {
+                id: req.params.id,
+                title: Random.cword(1, 30),
+                brief: Random.cword(1, 300),
+                content: Random.cparagraph(1, 3000),
+                category: categoryList[Random.integer(0, 3)],
+                labels: 'test,asdf,tas',
+                date: Random.datetime('yyyy年M月d日 H:m:s')
+            })
+        }
+    }, {
         api: '/articles',
         response: (req, res) => {
             let articles = []
@@ -26,40 +53,13 @@ module.exports = [
             sendJson(res, articles)
         }
     }, {
-        api: '/articles/1',
-        response: (req, res) => {
-            sendJson(res, {
-                id: Random.integer(1, 100),
-                title: Random.cword(1, 30),
-                brief: Random.cparagraph(1, 200),
-                content: Random.cparagraph(1, 3000),
-                category: categoryList[Random.integer(0, 3)],
-                labels: 'test,asdf,tas',
-                date: Random.datetime('yyyy年M月d日 H:m:s')
-            })
-        }
-    }, {
-        api: '/articles/1/nav',
-        response: (req, res) => {
-            sendJson(res, {
-                pre: {
-                    id: -1,
-                    title: '没有了'
-                },
-                next: {
-                    id: 2,
-                    title: '冈格尼尔，不中的必中之枪'
-                }
-            })
-        }
-    }, {
-        api: '/comments',
+        api: '/comments/:aid',
         response: (req, res) => {
             let comments = []
             for (let i=0; i<Random.integer(1, 30); i++) {
                 comments.push({
                     id: Random.integer(1, 100),
-                    article_id: Random.integer(1, 100),
+                    article_id: req.params.aid,
                     name: Random.word(),
                     email: Random.email('koumakan.cc'),
                     website: Random.url(),

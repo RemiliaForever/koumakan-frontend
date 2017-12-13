@@ -302,4 +302,8 @@
             }
         }
     }
+
+    .md-whiteframe {
+        background-color: #fff;
+    }
 </style>

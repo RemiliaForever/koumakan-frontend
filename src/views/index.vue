@@ -41,6 +41,7 @@
             getArticleList() {
                 let value = this.$route.params.value
                 let filter = this.$route.name
+                console.debug('getArticleList():' + filter + ' ' + value)
                 if (filter === 'home') {
                     this.$emit('changeTitle', 'Welcome to Koumakan')
                 } else {

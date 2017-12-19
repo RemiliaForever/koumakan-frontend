@@ -87,6 +87,10 @@ let webpackConfig = merge(baseWebpackConfig, {
                 )
             }
         }),
+        new webpack.optimize.CommonsChunkPlugin({
+            async: 'async-vendor',
+            minChunks: (module, count) => count >= 2
+        }),
         // extract webpack runtime and module manifest to its own file in order to
         // prevent vendor hash from being updated whenever app bundle is updated
         new webpack.optimize.CommonsChunkPlugin({

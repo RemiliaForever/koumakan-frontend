@@ -56,8 +56,8 @@
                     <md-list-item>
                         <router-link to="/about"><md-icon>link</md-icon><span>关于</span></router-link>
                     </md-list-item>
-                    <md-list-item target="_black" href="/rss">
-                        <md-icon>rss_feed</md-icon><span>RSS</span>
+                    <md-list-item>
+                        <router-link to="/rss"><md-icon>rss_feed</md-icon><span>RSS</span></router-link>
                     </md-list-item>
                 </md-list>
             </nav>
@@ -270,7 +270,6 @@
         .content-view {
             transition: all .45s cubic-bezier(0.23, 1, 0.32, 1);
             padding-top: 15px;
-            padding-bottom: 15px;
             min-height: 100%;
         }
         @media(max-width: 980px) {

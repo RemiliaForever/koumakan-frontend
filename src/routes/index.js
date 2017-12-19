@@ -1,6 +1,7 @@
 const Index = r => import(/* webpackChunkName: "index" */ 'views/index')
 const Article = r => import(/* webpackChunkName: "article" */ 'views/article')
 const NotFound = r => import(/* webpackChunkName: "notfound" */ 'views/notfound')
+const Admin = r => import(/* webpackChunkName: "admin" */ 'views/admin')
 
 // 根目录
 const rootPath = ''
@@ -14,10 +15,10 @@ const routes = [
     {path: '/archive/:value', name: 'archive', component: Index},
     {path: '/search/:value', name: 'search', component: Index},
     {path: '/article/:id', name: 'article', component: Article},
-    {path: '/admin', component: Index, children: [
-        {path: '', component: Index},
-        {path: 'login', component: Index}
-    ]},
+    {path: '/article/10080', component: Index, alias: '/about'},
+    {path: '/article/10081', component: Index, alias: '/friends'},
+    {path: '/article/10082', component: Index, alias: '/rss'},
+    {path: '/admin', component: Admin},
     {path: '/notfound', component: NotFound}
 ].map(route => {
     route.path = rootPath + route.path

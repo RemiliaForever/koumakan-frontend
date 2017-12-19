@@ -2,13 +2,13 @@
     <div>
         <md-whiteframe class="article">
             <p class="title">{{ article.title }}</p>
-            <div>
+            <div class="info">
                 <div class="date">
-                    <md-icon value="date_range"/>
+                    <md-icon>date_range</md-icon>
                     <span>{{ article.date }}</span>
                 </div>
                 <div class="labels" v-for="label in article.labels.split(',')" :key="label">
-                    <md-icon value="turned_in"/>
+                    <md-icon>turned_in</md-icon>
                     <router-link :to="'/label/' + label">{{ label }}</router-link>
                 </div>
             </div>
@@ -18,10 +18,12 @@
             </div>
             <md-divider/>
             <div class="nav">
-                <md-button :disabled="buttonNav.pre.id <= 0" :to="buttonNav.pre.id>0?'/article/'+buttonNav.pre.id:null" primary>
+                <md-button :disabled="buttonNav.pre.id <= 0" :to="buttonNav.pre.id>0?'/article/'+buttonNav.pre.id:null" primary
+                    class="left">
                     上一篇：{{ buttonNav.pre.title }}
                 </md-button>
-                <md-button :disabled="buttonNav.next.id <= 0" :to="buttonNav.next.id>0?'/article/'+buttonNav.next.id:null" primary>
+                <md-button :disabled="buttonNav.next.id <= 0" :to="buttonNav.next.id>0?'/article/'+buttonNav.next.id:null" primary
+                    class="right">
                     下一篇：{{ buttonNav.next.title }}
                 </md-button>
             </div>
@@ -180,9 +182,26 @@
         .title {
             text-align: center;
             font-size: 32px;
-            margin: 0px;
+            margin: 20px auto;
             font-weight: 500;
         }
+        .info {
+            margin: 0 auto;
+            line-height: 36px;
+            text-align: center;
+            .date, .labels {
+                height: 36px;
+                display: inline;
+                color: gray;
+                a {
+                    color: gray;
+                }
+            }
+            .date {
+                margin-right: 30px;
+            }
+        }
+
         .brief {
             font-size: 14px;
             color: gray;
@@ -197,15 +216,20 @@
         }
     }
     .nav {
-        margin-top: 12px;
-        padding-left: 12px;
-        padding-right: 12px;
-        & > * {
-            padding-left: 16px;
-            padding-right: 16px;
-            flex: none;
+        margin: 0px 12px -10px 12px;
+        .left {
+            float: left;
+        }
+        .right {
+            float: right;
         }
     }
+        .nav::after {
+            content: '';
+            display: block;
+            clear: both;
+            visibility: hidden;
+        }
     .comment-list {
         margin-top: 25px;
         padding: 25px;
@@ -267,56 +291,9 @@
             margin-top: 15px;
         }
     }
-    .date, .labels {
-        display: inline;
-        height: 36px;
-        line-height: 36px;
-        color: gray;
-        flex: none;
-        i {
-            position: relative;
-            top: 6px;
-            left: 4px;
-        }
-        a {
-            color: gray;
-        }
-    }
-    .date {
-        margin-right: 10px;
-    }
-    .toast {
-        left: auto;
-        right: auto;
-        bottom: 7%;
-    }
+
 
     #content {
-        p {
-            margin: 10px;
-            text-indent: 2em;
-        }
-
-        h1,h2,h3,h4,h5,h6 {
-            font-weight: 500;
-        }
-
-        pre {
-            background-color: #cdcdcd;
-            padding: 5px;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-            code {
-                display: block;
-                padding: 5px;
-                background-color: #ebebeb;
-                font-size: 14px;
-                word-wrap: break-word;
-            }
-        }
-        blockquote {
-            border-left: 5px solid #cdcdcd;
-        }
+        @import '~assets/markdown.scss';
     }
 </style>

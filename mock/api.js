@@ -18,7 +18,7 @@ module.exports = [
                     title: '没有了'
                 },
                 next: {
-                    id: req.params.id+1,
+                    id: Number(req.params.id)+1,
                     title: '冈格尼尔，不中的必中之枪'
                 }
             })

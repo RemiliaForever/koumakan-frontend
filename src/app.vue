@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <md-sidenav class="md-left md-fixed main-sidebar" md-swipeable ref="sidebar">
+        <md-sidenav id="main-sidebar" class="md-left md-fixed" md-swipeable ref="sidebar">
             <header>
                 <img src="/static/img/avatar.jpg" alt="RemiliaForever">
                 <span class="md-headline">RemiliaForever</span>
@@ -63,7 +63,7 @@
             </nav>
         </md-sidenav>
         <md-whiteframe md-elevation="1">
-            <md-toolbar class="main-toolbar" md-theme="white">
+            <md-toolbar id="main-toolbar" md-theme="white">
                 <md-button class="md-icon-button toggle-button" @click="$refs.sidebar.toggle()">
                     <md-icon>menu</md-icon>
                 </md-button>
@@ -188,7 +188,7 @@
         width: 100%;
         height: 100%;
     }
-    .main-sidebar {
+    #main-sidebar {
         .md-sidenav-content {
             width: $sidebar-size;
             height: 100%;
@@ -236,7 +236,7 @@
             }
         }
     }
-    .main-toolbar {
+    #main-toolbar {
         @include desktop {
             margin-left: $sidebar-size;
             padding-left: 20px;

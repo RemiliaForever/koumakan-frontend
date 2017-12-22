@@ -143,7 +143,7 @@
                 this.$http.get('/articles/'+id+'/nav')
                     .then(res => this.buttonNav = res.data)
                 // get comment
-                this.$http.post('/comments/aid/'+id)
+                this.$http.get('/comments/aid/'+id)
                     .then(res => this.comments = res.data)
             },
             addComment() {

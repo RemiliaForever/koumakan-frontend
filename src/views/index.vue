@@ -25,8 +25,8 @@
                     labels: '',
                     date: '0000-00-00 00:00:00'
                 }],
-                pagesize: null,
-                offset: null
+                pagesize: 10,
+                offset: 0
             }
         },
         components: {
@@ -43,6 +43,7 @@
                 let filter = this.$route.name
                 console.debug('getArticleList():' + filter + ' ' + value)
                 if (filter === 'home') {
+                    filter = null
                     this.$emit('changeTitle', 'Welcome to Koumakan')
                 } else {
                     switch (filter) {
@@ -63,21 +64,25 @@
                     }
                 }
                 this.offset = 0
-                this.$http.get('articles', {
-                    filter: this.$route.params.filter,
+                this.$http.get('articles', {params: {
+                    filter: filter,
                     value: this.$route.params.value,
                     pagesize: this.pagesize,
                     offset: this.offset
-                }).then(res => this.articles = res.data)
+                }}).then(res => this.articles = res.data)
             },
             getMoreArticle() {
                 this.offset += this.pagesize
-                this.$http.get('/articles', {
-                    filter: this.$route.params.filter,
+                let filter = this.$route.name
+                if (filter === 'home') {
+                    filter = null
+                }
+                this.$http.get('/articles', {params: {
+                    filter: filter,
                     value: this.$route.params.value,
                     pagesize: this.pagesize,
                     offset: this.offset
-                }).then(res => this.articles.concat(res.data))
+                }}).then(res => this.articles.concat(res.data))
             }
         },
         mounted() {

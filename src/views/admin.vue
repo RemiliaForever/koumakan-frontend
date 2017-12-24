@@ -1,6 +1,6 @@
 <template>
     <md-whiteframe md-elevation="3" class="paper">
-        <div v-if="isLogin">
+        <div v-if="!isLogin">
             <p class="title">后台登录入口</p>
             <div class="search">
                 <md-input-container md-inline>
@@ -46,7 +46,7 @@
                     <textarea v-model="article.content"></textarea>
                 </md-layout>
                 <md-layout md-flex="1" class="preview">
-                    <div id="preview" style="display: block">
+                    <div id="preview" class="markdown-body hljs">
                     </div>
                 </md-layout>
             </md-layout>
@@ -60,12 +60,12 @@
                 <md-dialog-content>
                     <md-input-container>
                         <label>文章ID</label>
-                        <md-input type="number" ref="loadId"></md-input>
+                        <md-input type="number" v-model="loadId"></md-input>
                     </md-input-container>
                 </md-dialog-content>
                 <md-dialog-actions>
                     <md-button class="md-primary" @click="$refs.dialog.close()">Cancel</md-button>
-                    <md-button class="md-primary" @click="load($refs.loadId.value)">Ok</md-button>
+                    <md-button class="md-primary" @click="load" :disabled="!loadId">Ok</md-button>
                 </md-dialog-actions>
             </md-dialog>
 
@@ -107,6 +107,7 @@
                     labels: '',
                     date: ''
                 },
+                loadId: null,
                 message: ''
             }
         },
@@ -119,17 +120,13 @@
             login() {
                 this.$http.post('/login', this.pass)
                     .then(res => {
-                        if (res.data === 'Login Success') {
-                            this.isLogin = true
-                        } else {
-                            this.pass = ''
-                        }
+                        this.isLogin = true
                     }).catch(e => {
                         this.pass = ''
                     })
             },
-            load(id) {
-                this.$http.get('/articles/id/' + id)
+            load() {
+                this.$http.get('/articles/' + this.loadId)
                     .then(res => {
                         this.article = res.data
                     })
@@ -158,6 +155,10 @@
             }
         },
         mounted() {
+            this.$http.get('/login')
+                .then(res => {
+                    this.isLogin = true
+                })
             this.$emit('changeTitle', 'Admin Page')
         }
     }
@@ -202,6 +203,7 @@
     #preview {
         padding: 5px;
         width: 100%;
+        display: block;
         @import '~assets/markdown.scss';
     }
 </style>

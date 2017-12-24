@@ -13,8 +13,7 @@
                 </div>
             </div>
             <p class="brief">{{ article.brief }}</p>
-            <div id="content">
-                {{ article.content }}
+            <div id="content" class="markdown-body">
             </div>
             <md-divider/>
             <div class="nav">
@@ -75,10 +74,23 @@
 </template>
 
 <script>
-    // highlight
-    import Hljs from 'highlight.js'
     import 'highlight.js/styles/github.css'
-
+    // markdown 和 highlight 支持
+    import marked from 'marked'
+    import 'highlight.js/styles/github.css'
+    marked.setOptions({
+        renderer: new marked.Renderer(),
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false,
+        highlight: function(code) {
+            return require('highlight.js').highlightAuto(code).value
+        }
+    })
     export default {
         data() {
             return {
@@ -124,7 +136,7 @@
             }
         },
         methods: {
-            async getData() {
+            getData() {
                 let id = this.$route.params.id
                 this.$emit('changeTitle', '载入中...')
                 // get article
@@ -135,15 +147,13 @@
                             this.$router.push('/notfound')
                         }
                         this.$emit('changeTitle', this.article.title)
-                        // render
-                        let blocks = document.getElementById('content').querySelectorAll('pre code')
-                        Hljs.highlightBlock(blocks)
+                        document.getElementById('content').innerHTML = marked(this.article.content)
                     })
                 // get nav
                 this.$http.get('/articles/'+id+'/nav')
                     .then(res => this.buttonNav = res.data)
                 // get comment
-                this.$http.get('/comments/aid/'+id)
+                this.$http.get('/comments/'+id)
                     .then(res => this.comments = res.data)
             },
             addComment() {
@@ -163,7 +173,8 @@
                     this.buttonSubbmit.isSent = true
                     this.buttonSubbmit.text = '已发送'
                     // refresh comment
-                    this.comments = this.post('/api/getComments', {id: id})
+                    this.$http.get('/comments/'+id)
+                        .then(res => this.comments = res.data)
                 }).catch(error=>{
                     this.buttonSubbmit.isSending = false
                     this.buttonSubbmit.text = '重新发送'
@@ -213,6 +224,7 @@
         #content {
             padding: 1% 3% 1% 3%;
             font-size: 16px;
+            @import '~assets/markdown.scss';
         }
     }
     .nav {
@@ -224,12 +236,12 @@
             float: right;
         }
     }
-        .nav::after {
-            content: '';
-            display: block;
-            clear: both;
-            visibility: hidden;
-        }
+    .nav::after {
+        content: '';
+        display: block;
+        clear: both;
+        visibility: hidden;
+    }
     .comment-list {
         margin-top: 25px;
         padding: 25px;
@@ -292,8 +304,4 @@
         }
     }
 
-
-    #content {
-        @import '~assets/markdown.scss';
-    }
 </style>

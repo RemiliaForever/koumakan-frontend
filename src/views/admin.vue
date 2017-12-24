@@ -190,6 +190,7 @@
         min-height: 350px;
         .textarea, .preview {
             min-height: 100%;
+            max-width: 50%;
             border: solid 1px gray;
         }
     }

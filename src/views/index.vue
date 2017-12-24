@@ -25,7 +25,7 @@
                     labels: '',
                     date: '0000-00-00 00:00:00'
                 }],
-                pagesize: 10,
+                pagesize: 30,
                 offset: 0
             }
         },

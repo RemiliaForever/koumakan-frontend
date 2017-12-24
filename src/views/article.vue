@@ -17,12 +17,12 @@
             </div>
             <md-divider/>
             <div class="nav">
-                <md-button :disabled="buttonNav.pre.id <= 0" :to="buttonNav.pre.id>0?'/article/'+buttonNav.pre.id:null" primary
-                    class="left">
+                <md-button :disabled="buttonNav.pre.id <= 0" class="left md-primary"
+                    @click="$router.push('/article/'+buttonNav.pre.id)">
                     上一篇：{{ buttonNav.pre.title }}
                 </md-button>
-                <md-button :disabled="buttonNav.next.id <= 0" :to="buttonNav.next.id>0?'/article/'+buttonNav.next.id:null" primary
-                    class="right">
+                <md-button :disabled="buttonNav.next.id <= 0" class="right md-primary"
+                    @click="$router.push('/article/'+buttonNav.next.id)">
                     下一篇：{{ buttonNav.next.title }}
                 </md-button>
             </div>

@@ -15,8 +15,8 @@ const routes = [
     {path: '/archive/:value', name: 'archive', component: Index},
     {path: '/search/:value', name: 'search', component: Index},
     {path: '/article/:id', name: 'article', component: Article},
-    {path: '/article/10080', component: Index, alias: '/about'},
-    {path: '/article/10081', component: Index, alias: '/friends'},
+    {path: '/article/10080', component: Index, alias: '/friends'},
+    {path: '/article/10081', component: Index, alias: '/about'},
     {path: '/article/10082', component: Index, alias: '/rss'},
     {path: '/admin', component: Admin},
     {path: '/notfound', component: NotFound}

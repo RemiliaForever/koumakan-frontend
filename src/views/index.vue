@@ -34,6 +34,7 @@
         },
         watch: {
             '$route'(to, from) {
+                this.$emit('goto')
                 this.getArticleList()
             }
         },

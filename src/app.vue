@@ -80,7 +80,7 @@
         </md-whiteframe>
         <main>
             <div class="content-view">
-                <router-view @changeTitle="changeTitle"/>
+                <router-view @changeTitle="changeTitle" @goto="$refs.sidebar.close()"/>
             </div>
         </main>
     </div>

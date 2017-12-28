@@ -78,9 +78,9 @@
                 </md-input-container>
             </md-toolbar>
         </md-whiteframe>
-        <main>
+        <main id="scrollview">
             <div class="content-view">
-                <router-view @changeTitle="changeTitle" @goto="$refs.sidebar.close()"/>
+                <router-view @changeTitle="changeTitle"/>
             </div>
         </main>
     </div>
@@ -159,6 +159,7 @@
             })
             this.$router.beforeEach((to, from, next) => {
                 this.isLoading.router = true
+                this.$refs.sidebar.close()
                 next()
             })
             this.$router.afterEach(() => {

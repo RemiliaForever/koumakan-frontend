@@ -53,6 +53,7 @@
     }
     .title {
         padding: 16px;
+        margin-right: 32px;
         a {
             color: #373a3f;
             font-size: 24px;

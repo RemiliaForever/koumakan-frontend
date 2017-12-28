@@ -148,6 +148,7 @@
                         }
                         this.$emit('changeTitle', this.article.title)
                         document.getElementById('content').innerHTML = marked(this.article.content)
+                        document.getElementById('scrollview').scrollTo({'behavior': 'smooth', 'top': 0})
                     })
                 // get nav
                 this.$http.get('/articles/'+id+'/nav')
@@ -193,6 +194,7 @@
         .title {
             text-align: center;
             font-size: 32px;
+            line-height: 40px;
             margin: 20px auto;
             font-weight: 500;
         }

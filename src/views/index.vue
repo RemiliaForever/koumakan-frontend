@@ -34,7 +34,6 @@
         },
         watch: {
             '$route'(to, from) {
-                this.$emit('goto')
                 this.getArticleList()
             }
         },
@@ -70,7 +69,10 @@
                     value: this.$route.params.value,
                     pagesize: this.pagesize,
                     offset: this.offset
-                }}).then(res => this.articles = res.data)
+                }}).then(res => {
+                    this.articles = res.data
+                    document.getElementById('scrollview').scrollTo({'behavior': 'smooth', 'top': 0})
+                })
             },
             getMoreArticle() {
                 this.offset += this.pagesize

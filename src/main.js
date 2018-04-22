@@ -22,9 +22,8 @@ const router = new VueRouter({
 // axios
 import axios from 'axios'
 axios.defaults.responseType = 'json'
-axios.defaults.baseURL = 'https://api.blog.koumakan.cc'
 axios.defaults.withCredentials = true
-// axios.defaults.baseURL = 'http://localhost:8080'
+axios.defaults.baseURL = process.env.BACKEND_SERVER
 
 Vue.prototype.$http = axios
 

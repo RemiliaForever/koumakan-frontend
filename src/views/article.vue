@@ -74,7 +74,6 @@
 </template>
 
 <script>
-    import 'highlight.js/styles/github.css'
     // markdown 和 highlight 支持
     import marked from 'marked'
     import 'highlight.js/styles/github.css'

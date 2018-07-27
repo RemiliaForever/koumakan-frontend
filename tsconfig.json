@@ -1,11 +1,11 @@
 {
     "include": [
-        "src/*",
         "src/**/*"
     ],
     "exclude": [
         "node_modules"
     ],
+    "types": ["node"],
     "compilerOptions": {
         "strict": true,
         "jsx": "preserve",

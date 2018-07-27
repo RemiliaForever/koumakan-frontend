@@ -6,23 +6,22 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue'
-    import VueRouter from 'vue-router'
-    import Component from 'vue-class-component'
+import Vue from 'vue'
+import Component from 'vue-class-component'
 
-    @Component
-    export default class HelloWorld extends Vue {
-        msg: string = 'Welcome to Your Vue.js App'
+@Component
+export default class HelloWorld extends Vue {
+    msg: string = 'Welcome to Your Vue.js App'
 
-        mounted() {
-            console.log('hello')
-            console.log(this.$router)
-        }
-
-        hello() {
-            console.log('123')
-        }
+    mounted() {
+        this.hello()
+        console.time('test')
     }
+
+    hello() {
+        console.log('123')
+    }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

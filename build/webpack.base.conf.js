@@ -22,14 +22,28 @@ module.exports = {
             : config.dev.assetsPublicPath
     },
     resolve: {
-        extensions: ['.js', '.ts', '.vue', '.json'],
+        extensions: ['.js', '.ts', '.tsx', '.vue', '.json'],
         alias: {
-            '@': resolve('src')
+            'vue$': 'vue/dist/vue.esm.js',
+            '@': resolve('src'),
+            'src': resolve('src'),
+            'assets': resolve('src/assets'),
+            'views': resolve('src/views'),
+            'routes': resolve('src/routes'),
+            'components': resolve('src/components')
         }
     },
     module: {
         rules: [
             {
+                enforce: 'pre',
+                test: /\.(js|vue|ts|tsx)$/,
+                loader: 'eslint-loader',
+                exclude: /node_modules/,
+                options: {
+                    formatter: require('eslint-friendly-formatter')
+                }
+            }, {
                 test: /\.vue$/,
                 loader: 'vue-loader',
                 options: vueLoaderConfig

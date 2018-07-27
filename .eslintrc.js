@@ -11,7 +11,7 @@ module.exports = {
     // required to lint *.vue files
     plugins: [
         'html',
-        'eslint-plugin-flowtype'
+        'vue'
     ],
     // add your custom rules here
     'rules': {
@@ -26,6 +26,7 @@ module.exports = {
         'require-jsdoc': 0,
         'comma-dangle': [2, 'never'],
         'max-len': [1, 120],
-        'switch-colon-spacing': 0
+        'switch-colon-spacing': 0,
+        'no-unused-vars': 1
     }
 }

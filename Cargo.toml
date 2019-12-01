@@ -9,3 +9,5 @@ edition = "2018"
 [dependencies]
 yew = "0.10.0"
 stdweb = "0.4.20"
+web_logger = "0.2.0"
+log = "0.4.8"

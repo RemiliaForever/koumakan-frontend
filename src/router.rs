@@ -1,6 +1,6 @@
 use stdweb::web::{window, Window};
 use yew::services::ConsoleService;
-use yew::{html, Component, ComponentLink, Html, Properties, ShouldRender};
+use yew::{html, Callback, Component, ComponentLink, Html, Properties, ShouldRender};
 
 use crate::views;
 
@@ -8,10 +8,13 @@ pub struct Router {
     window: Window,
     console: ConsoleService,
     child: Child,
+    on_signal: Callback<crate::Msg>,
 }
 
 pub enum Msg {
     Reload,
+    UpdateComponent,
+    Title(&'static str),
 }
 
 pub enum Child {
@@ -19,20 +22,22 @@ pub enum Child {
     Admin,
 }
 
-#[derive(Properties, Default, Clone, Debug, PartialEq)]
+#[derive(Properties, PartialEq)]
 pub struct RouterProps {
-    path: String,
+    #[props(required)]
+    pub on_signal: Callback<crate::Msg>,
 }
 
 impl Component for Router {
     type Message = Msg;
     type Properties = RouterProps;
 
-    fn create(_p: Self::Properties, _: ComponentLink<Self>) -> Self {
+    fn create(p: Self::Properties, _: ComponentLink<Self>) -> Self {
         let r = Router {
             child: Child::Index,
             console: ConsoleService::new(),
             window: window(),
+            on_signal: p.on_signal,
         };
         // window().add_event_listener(move |event: PopStateEvent| {
         //     r.update(Msg::Reload);
@@ -60,6 +65,14 @@ impl Component for Router {
                     self.console.error("get location error!");
                     false
                 }
+            }
+            Msg::Title(t) => {
+                self.on_signal.emit(crate::Msg::Title(t));
+                false
+            }
+            Msg::UpdateComponent => {
+                self.on_signal.emit(crate::Msg::UpdateComponent);
+                false
             }
         }
     }

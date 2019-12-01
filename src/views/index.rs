@@ -30,6 +30,12 @@ impl Component for Index {
         }
     }
 
+    fn mounted(&mut self) -> ShouldRender {
+        self.on_signal.emit(router::Msg::Title("Index"));
+        self.on_signal.emit(router::Msg::UpdateComponent);
+        false
+    }
+
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::Do => {
@@ -42,7 +48,7 @@ impl Component for Index {
 
     fn view(&self) -> Html<Self> {
         html! {
-            <button onclick=|_| Msg::Do class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect">{ "Index" }</button>
+            <button id="btn-index" onclick=|_| Msg::Do class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect">{ "Index" }</button>
         }
     }
 }

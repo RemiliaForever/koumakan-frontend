@@ -1,3 +1,4 @@
+use log::debug;
 use stdweb::web::{window, History};
 use yew::{html, Component, ComponentLink, Html, ShouldRender};
 use yew::{Callback, Properties};
@@ -30,6 +31,12 @@ impl Component for Admin {
         }
     }
 
+    fn mounted(&mut self) -> ShouldRender {
+        self.on_signal.emit(router::Msg::Title("Admin"));
+        self.on_signal.emit(router::Msg::UpdateComponent);
+        true
+    }
+
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::Do => {
@@ -41,8 +48,9 @@ impl Component for Admin {
     }
 
     fn view(&self) -> Html<Self> {
+        debug!("{}", 123);
         html! {
-            <button onclick=|_| Msg::Do class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect">{ "Admin" }</button>
+            <button id="btn-admin" onclick=|_| Msg::Do class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect">{ "Admin" }</button>
         }
     }
 }
